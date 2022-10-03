@@ -15,8 +15,6 @@ type
     Image1: TImage;
     StaticText1: TStaticText;
     procedure FormCreate(Sender: TObject);
-    procedure Image1Click(Sender: TObject);
-    procedure StaticText1Click(Sender: TObject);
   private
 
   public
@@ -31,16 +29,6 @@ implementation
 {$R *.lfm}
 uses VersionSupport;
 { TForm2 }
-
-procedure TForm2.StaticText1Click(Sender: TObject);
-begin
-
-end;
-
-procedure TForm2.Image1Click(Sender: TObject);
-begin
-
-end;
 
 procedure TForm2.FormCreate(Sender: TObject);
 var zawartosc :string ;

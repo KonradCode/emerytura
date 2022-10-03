@@ -17,49 +17,57 @@ type
     Button2: TButton;
     ComboBox1: TComboBox;
     DateTimePicker1: TDateTimePicker;
+    emeryturaPodstawaEdit: TEdit;
+    emeryturaBruttoEdit: TEdit;
     emeryturaNettoEdit: TEdit;
-    emeryturaSzacynek: TEdit;
-    GroupBox3: TGroupBox;
-    kwotaWolnaEdit: TEdit;
+    emeryturaSzacunek: TEdit;
     GroupBox1: TGroupBox;
     GroupBox2: TGroupBox;
+    GroupBox3: TGroupBox;
+    GroupBox4: TGroupBox;
+    kwotaWolnaEdit: TEdit;
+    Label1: TLabel;
+    Label10: TLabel;
     Label11: TLabel;
     Label12: TLabel;
     Label13: TLabel;
-    Memo1: TMemo;
-    podatekEdit: TEdit;
-    StatusBar1: TStatusBar;
-    StringGrid1: TStringGrid;
-    TabSheet3: TTabSheet;
-    TabSheet4: TTabSheet;
-    ValueListEditor1: TValueListEditor;
-    zdrowotnaEdit: TEdit;
-    Label10: TLabel;
-    Label7: TLabel;
-    Label8: TLabel;
-    Label9: TLabel;
-    MainMenu1: TMainMenu;
-    MenuItem1: TMenuItem;
-    MenuItem2: TMenuItem;
-    MenuItem3: TMenuItem;
-    pensjaBruttoEdit: TEdit;
-    podwyzkaBruttoEdit: TEdit;
-    lataEdit: TEdit;
-    emeryturaBruttoEdit: TEdit;
-    miesiaceEdit: TEdit;
-    Label1: TLabel;
+    Label14: TLabel;
     Label2: TLabel;
     Label3: TLabel;
     Label4: TLabel;
     Label5: TLabel;
     Label6: TLabel;
+    Label7: TLabel;
+    Label8: TLabel;
+    Label9: TLabel;
+    lataEdit: TEdit;
+    Memo1: TMemo;
+    miesiaceEdit: TEdit;
     PageControl1: TPageControl;
+    pensjaBruttoEdit: TEdit;
+    podatekEdit: TEdit;
+    podwyzkaBruttoEdit: TEdit;
+    StatusBar1: TStatusBar;
+    MainMenu1: TMainMenu;
+    MenuItem1: TMenuItem;
+    MenuItem2: TMenuItem;
+    MenuItem3: TMenuItem;
+    StringGrid1: TStringGrid;
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
+    TabSheet3: TTabSheet;
+    TabSheet4: TTabSheet;
+    ValueListEditor1: TValueListEditor;
+    zdrowotnaEdit: TEdit;
     procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure MenuItem2Click(Sender: TObject);
     procedure MenuItem3Click(Sender: TObject);
+    procedure StatusBar1CreatePanelClass(Sender: TStatusBar;
+      var PanelClass: TStatusPanelClass);
+    procedure TabSheet1ContextPopup(Sender: TObject; MousePos: TPoint;
+      var Handled: Boolean);
   private
     komunikatBledu: string;
 
@@ -89,6 +97,8 @@ type
     function wyliczPrzyszleEmerytury: boolean;
     function wyliczPrzyszlaEmeryture(procenty: single): currency;
 
+    function szacujWaloryzacje: boolean;
+
   public
 
 
@@ -99,25 +109,7 @@ var
 
 implementation
 
-uses unit3;
-//przyjmując do wyliczenia podaną kwotę uposażenia oraz procent wysługi
-//tj.:
-//7589,00  zł brutto wraz z miesięczną równowartością 1/12 nagrody rocznej
-//stanowiącej kwotę 632,42zł  (7589,00 : 12), podstawa wymiaru emerytury
-//wynosiła będzie - kwotę 8 221,42 (7589,00+632,42)
-
-//Zatem, przyszła emerytura policyjna ustalona będzie w kwocie brutto:
-//6 166,07 zł  (8221,42x 75%)
-
-//Wg stanu prawnego obowiązującego w dniu dzisiejszym kwotę emerytury do
-//wypłaty oblicza się taj poniżej:
-
-//emerytura brutto 6 166,00 x 12% - 300,00 (kwota wolna od podatku) =
-//440,00 (do obliczenia zaliczki na podatekEdit kwoty zaokrągla się do pełnych
-//złotych)
-//emerytura brutto 6 166,07 x 9% = 554,95 składka zdrowotna
-//emerytura brutto 6 166,07 - 440,-554,95 = 5 171,12 kwota emerytury do
-//wypłaty
+uses unit3,VersionSupport;
 
 {$R *.lfm}
 
@@ -134,21 +126,37 @@ begin
 
   procenty := 0;
   procentyMiesiac := 0;
-  procenty := strtoFloat(lataEdit.Text);
-  procentyMiesiac := strtoFloat(miesiaceEdit.Text);
-  if procenty < 15 then
-  begin
-    procenty := 0;
-  end
-  else
-  begin
-    procentyMiesiac := procentyMiesiac * (2.6 / 12);
-    procenty := procenty - 15;
-    procenty := 40 + (procenty * 2.6) + procentyMiesiac;
-    if procenty > 75 then
-      procenty := 75;
 
+  try
+  procenty := strtoFloat(lataEdit.Text);
+  except
+   ShowMessage('Wprowadzono błędne dane ! ' + LineEnding + 'Liczba lat nieprawidłowa');
   end;
+
+  try
+  procentyMiesiac := strtoFloat(miesiaceEdit.Text);
+  except
+   ShowMessage('Wprowadzono błędne dane ! ' + LineEnding + 'Liczba miesięcy nieprawidłowa');
+  end;
+
+  if   procentyMiesiac > 11  then
+       begin
+         procentyMiesiac:=0;
+         miesiaceEdit.Text:='0';
+         ShowMessage('Wprowadzono błędne dane ! ' + LineEnding + 'Liczba miesięcy nieprawidłowa');
+
+       end;
+
+  if procenty < 15 then   procenty := 0
+
+  else
+      begin
+      procentyMiesiac := procentyMiesiac * (2.6 / 12);
+      procenty := procenty - 15;
+      procenty := 40 + (procenty * 2.6) + procentyMiesiac;
+      if procenty > 75 then  procenty := 75;
+
+      end;
   Result := procenty;
 end;
 
@@ -264,6 +272,7 @@ begin
 
   emeryturaNetto := wyliczEmerytureNetto;
 
+  if  emeryturaBrutto > 0 then  emeryturaPodstawaEdit.Text:=FloatToStr(podstawaEmerytury);
   emeryturaBruttoEdit.Text := FloatToStr(emeryturaBrutto);
   emeryturaNettoEdit.Text := FloatToStr(emeryturaNetto);
   with Memo1.Lines do
@@ -411,6 +420,62 @@ end;
 
 
 
+
+function TForm1.szacujWaloryzacje : Boolean   ;
+
+var
+  i,ile :integer;
+
+
+// 2016;100,24;
+//2017;100,44;
+//2018;102,98;
+//2019;102,86;
+//2020;103,56;
+//2021;107,00;
+//2022;113,80;
+begin
+  ile := 2;
+
+
+
+
+
+
+  StringGrid1.RowCount:=1;
+  for i:= 0 to ile do  StringGrid1.InsertRowWithValues(StringGrid1.RowCount,['2016','100.24','0']);
+
+
+
+
+
+  //StringGrid1.InsertRowWithValues();
+ //with StringGrid1 do
+ //
+ //begin
+ //  InsertRowWithValues(RowCount,tabela);
+ //end
+ //
+
+ //          StringGrid1.RowCount := 1;
+ //for i := 0 to 6  do
+ //      with StringGrid1 do
+ //
+ //           begin
+ //
+ //             InsertRowWithValues(RowCount,wiersz);
+ //           end
+
+ result:=true;
+end;
+
+
+
+
+
+
+
+
 procedure TForm1.Button1Click(Sender: TObject);
 begin
   if sprawdzDane then
@@ -419,15 +484,22 @@ begin
     zapiszDane;
     wyliczEmeryture;
     wyliczPrzyszleEmerytury;
+
   end
 
   else
     ShowMessage('Wprowadzono błędne dane ! ' + LineEnding + komunikatBledu);
 end;
 
+procedure TForm1.Button2Click(Sender: TObject);
+begin
+   szacujWaloryzacje;
+end;
+
 procedure TForm1.FormCreate(Sender: TObject);
 begin
   PageControl1.TabIndex := 0;
+  StatusBar1.Panels.Items[0].Text:='Emerytura wersja: '+GetFileVersion;
 end;
 
 procedure TForm1.MenuItem2Click(Sender: TObject);
@@ -438,6 +510,18 @@ end;
 procedure TForm1.MenuItem3Click(Sender: TObject);
 begin
   Form2.Show;
+end;
+
+procedure TForm1.StatusBar1CreatePanelClass(Sender: TStatusBar;
+  var PanelClass: TStatusPanelClass);
+begin
+
+end;
+
+procedure TForm1.TabSheet1ContextPopup(Sender: TObject; MousePos: TPoint;
+  var Handled: Boolean);
+begin
+
 end;
 
 end.

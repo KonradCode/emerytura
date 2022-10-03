@@ -12,7 +12,7 @@
       <UseXPManifest Value="True"/>
       <XPManifest>
         <DpiAware Value="True"/>
-        <TextName Value="Psia.Emerytura"/>
+        <TextName Value="Emerytura"/>
         <TextDesc Value="Wyliczenia emerytury"/>
       </XPManifest>
       <Icon Value="0"/>
@@ -20,11 +20,13 @@
     <VersionInfo>
       <UseVersionInfo Value="True"/>
       <AutoIncrementBuild Value="True"/>
-      <RevisionNr Value="1"/>
-      <BuildNr Value="3"/>
+      <MajorVersionNr Value="1"/>
+      <RevisionNr Value="2"/>
+      <BuildNr Value="4"/>
       <Language Value="0415"/>
+      <CharSet Value="03B6"/>
       <Attributes pvaPrivateBuild="True"/>
-      <StringTable ProductName="Emerytura" ProductVersion="1"/>
+      <StringTable CompanyName="KC" OriginalFilename="Emerytura.exe" ProductName="Emerytura" ProductVersion="1"/>
     </VersionInfo>
     <BuildModes Count="3">
       <Item1 Name="Default" Default="True"/>

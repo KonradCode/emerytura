@@ -1,2 +1,4 @@
 *.exe
-emerytura.dbg
+*dbg
+waloryzacje*.txt
+
