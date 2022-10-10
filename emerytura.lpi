@@ -22,11 +22,11 @@
       <AutoIncrementBuild Value="True"/>
       <MajorVersionNr Value="1"/>
       <RevisionNr Value="2"/>
-      <BuildNr Value="4"/>
+      <BuildNr Value="5"/>
       <Language Value="0415"/>
       <CharSet Value="03B6"/>
       <Attributes pvaPrivateBuild="True"/>
-      <StringTable CompanyName="KC" OriginalFilename="Emerytura.exe" ProductName="Emerytura" ProductVersion="1"/>
+      <StringTable CompanyName="KC" FileDescription="Wyliczenie emerytury policyjnej" LegalCopyright="KC" OriginalFilename="Emerytura.exe" ProductName="Emerytura" ProductVersion="1"/>
     </VersionInfo>
     <BuildModes Count="3">
       <Item1 Name="Default" Default="True"/>

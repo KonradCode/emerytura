@@ -15,8 +15,7 @@ type
     Image1: TImage;
     StaticText1: TStaticText;
     procedure FormCreate(Sender: TObject);
-    procedure Image1Click(Sender: TObject);
-    procedure StaticText1Click(Sender: TObject);
+    procedure StaticText1DblClick(Sender: TObject);
   private
 
   public
@@ -29,18 +28,8 @@ var
 implementation
 
 {$R *.lfm}
-uses VersionSupport;
+uses VersionSupport,lclintf;
 { TForm2 }
-
-procedure TForm2.StaticText1Click(Sender: TObject);
-begin
-
-end;
-
-procedure TForm2.Image1Click(Sender: TObject);
-begin
-
-end;
 
 procedure TForm2.FormCreate(Sender: TObject);
 var zawartosc :string ;
@@ -49,6 +38,11 @@ var zawartosc :string ;
  StaticText1.Caption  := zawartosc.Replace('wersja','wersja '+GetFileVersion);
 
 
+end;
+
+procedure TForm2.StaticText1DblClick(Sender: TObject);
+begin
+  open
 end;
 
 end.

@@ -1,11 +1,11 @@
 object Form2: TForm2
-  Left = 536
+  Left = 570
   Height = 230
-  Top = 337
-  Width = 400
+  Top = 335
+  Width = 472
   Caption = 'O programie '
   ClientHeight = 230
-  ClientWidth = 400
+  ClientWidth = 472
   DesignTimePPI = 120
   OnCreate = FormCreate
   LCLVersion = '2.0.10.0'
@@ -15743,9 +15743,10 @@ object Form2: TForm2
     Left = 96
     Height = 230
     Top = 0
-    Width = 304
+    Width = 376
     Align = alClient
-    Caption = 'Emerytura '#13#10'wersja'#13#10'Autor:'#13#10'Konrad Zdziechowicz - Kielce'#13#10'Licencja Freeware'#13#10#13#10'Obliczenia aktualne na 2022 rok'#13#10'dla art.15 pkt1 ustawy '#13#10'o zaopatrzeniu emerytalnym funkcjonariuszy Policji'
+    Caption = 'Emerytura '#13#10'wersja'#13#10'Autor:'#13#10'Konrad Zdziechowicz - Kielce'#13#10'Licencja Freeware'#13#10'https://github.com/KonradCode/emerytura/releases/'#13#10#13#10'Obliczenia aktualne na 2022 rok'#13#10'dla art.15 pkt1 ustawy '#13#10'o zaopatrzeniu emerytalnym funkcjonariuszy Policji ...'
+    OnDblClick = StaticText1DblClick
     TabOrder = 0
   end
 end
