@@ -17,10 +17,12 @@ type
     Button1: TButton;
     Button2: TButton;
     Button3: TButton;
+    ComboBox1: TComboBox;
     DateTimePicker1: TDateTimePicker;
     emeryturaPodstawaEdit: TEdit;
     emeryturaBruttoEdit: TEdit;
     emeryturaNettoEdit: TEdit;
+    Label13: TLabel;
     wyslugaProcentEdit: TEdit;
     emeryturaSzacunekEdit: TEdit;
     GroupBox1: TGroupBox;
@@ -306,12 +308,14 @@ begin
   with Memo1.Lines do
   begin
     Clear;
-    Add('Wyliczona podstawaa : ' + FloatToStr(podstawaEmerytury) + LineEnding);
-    Add('Wyliczony procent : ' + FloatToStr(wyslugaProcent) + LineEnding);
-    Add('Emerytura Brutto : ' + FloatToStr(emeryturaBrutto) + LineEnding);
-    Add('Wyliczony podatek : ' + FloatToStr(podatekKwota) + LineEnding);
-    Add('Wyliczona skłądka zdrowotna : ' + FloatToStr(skladkaZdrowotna) + LineEnding);
-    Add('Emerytura Netto : ' + FloatToStr(emeryturaNetto) + LineEnding);
+    Add('Wyliczenie emerytury -----------------------------------');
+    Add('Wyliczona podstawaa : ' + FloatToStr(podstawaEmerytury));
+    Add('Wyliczony procent : ' + FloatToStr(wyslugaProcent));
+    Add('Emerytura Brutto : ' + FloatToStr(emeryturaBrutto));
+    Add('Wyliczony podatek : ' + FloatToStr(podatekKwota) );
+    Add('Wyliczona skłądka zdrowotna : ' + FloatToStr(skladkaZdrowotna) );
+    Add('Emerytura Netto : ' + FloatToStr(emeryturaNetto) );
+    Add('Koniec wyliczenia emerytury ----------------------------');
   end;
 
   Result := True;
@@ -530,35 +534,9 @@ begin
 end;
 
 procedure TForm1.Button2Click(Sender: TObject);
-//var wiersz,ostatniWiersz  :integer;
-//   waloryzacja:currency;
 begin
   szacujWaloryzacje;
 
-  //wiersz:=0;
-  //ostatniWiersz:=stringgrid1.RowCount-1;
-  //if czytajWaloryzacje
-  //   then
-  //       begin
-  //         //wiersz:= ;
-  //
-  //
-  //         for wiersz:=StringGrid1.Cols[0].IndexOf(FormatDateTime('yyyy',emeryturaWaloryzcjaData)) to  ostatniWiersz do
-  //         begin
-  //         waloryzacja:= StrToCurr( StringGrid1.Cells[1,wiersz]);
-  //         emeryturaWaloryzcja:= Round(emeryturaWaloryzcja*waloryzacja);
-  //         emeryturaWaloryzcja:= emeryturaWaloryzcja /100 ;
-  //         StringGrid1.Cells[2,wiersz] :=  CurrToStr(emeryturaWaloryzcja);
-  //         //wiersz+=1;
-  //         end;
-  //
-  //
-  //
-  //
-  //
-  //         //
-  //       end
-  //else ;
 end;
 
 procedure TForm1.Button3Click(Sender: TObject);

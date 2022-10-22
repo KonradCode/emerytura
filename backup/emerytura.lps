@@ -19,9 +19,10 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit1"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="559"/>
-        <CursorPos Y="577"/>
+        <TopLine Value="296"/>
+        <CursorPos X="5" Y="316"/>
         <UsageCount Value="206"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -34,9 +35,9 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit3"/>
         <EditorIndex Value="3"/>
-        <TopLine Value="23"/>
+        <TopLine Value="11"/>
         <CursorPos X="61" Y="45"/>
-        <UsageCount Value="199"/>
+        <UsageCount Value="201"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit2>
@@ -47,16 +48,16 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="211"/>
         <CursorPos X="20" Y="227"/>
-        <UsageCount Value="185"/>
+        <UsageCount Value="188"/>
       </Unit3>
       <Unit4>
         <Filename Value="unit2.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="Unit2"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
-        <CursorPos X="31" Y="177"/>
-        <UsageCount Value="103"/>
+        <TopLine Value="31"/>
+        <CursorPos Y="37"/>
+        <UsageCount Value="106"/>
         <Loaded Value="True"/>
       </Unit4>
       <Unit5>
@@ -247,15 +248,6 @@
     </RunParams>
   </ProjectSession>
   <Debugging>
-    <BreakPoints Count="1">
-      <Item1>
-        <Kind Value="bpkSource"/>
-        <WatchScope Value="wpsLocal"/>
-        <WatchKind Value="wpkWrite"/>
-        <Source Value="unit1.pas"/>
-        <Line Value="499"/>
-      </Item1>
-    </BreakPoints>
     <Watches Count="2">
       <Item1>
         <Expression Value="watoryzacjaTabela[i]"/>

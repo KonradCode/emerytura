@@ -17,10 +17,12 @@ type
     Button1: TButton;
     Button2: TButton;
     Button3: TButton;
+    ComboBox1: TComboBox;
     DateTimePicker1: TDateTimePicker;
     emeryturaPodstawaEdit: TEdit;
     emeryturaBruttoEdit: TEdit;
     emeryturaNettoEdit: TEdit;
+    Label13: TLabel;
     wyslugaProcentEdit: TEdit;
     emeryturaSzacunekEdit: TEdit;
     GroupBox1: TGroupBox;
@@ -306,12 +308,14 @@ begin
   with Memo1.Lines do
   begin
     Clear;
-    Add('Wyliczona podstawaa : ' + FloatToStr(podstawaEmerytury) + LineEnding);
-    Add('Wyliczony procent : ' + FloatToStr(wyslugaProcent) + LineEnding);
-    Add('Emerytura Brutto : ' + FloatToStr(emeryturaBrutto) + LineEnding);
-    Add('Wyliczony podatek : ' + FloatToStr(podatekKwota) + LineEnding);
-    Add('Wyliczona skłądka zdrowotna : ' + FloatToStr(skladkaZdrowotna) + LineEnding);
-    Add('Emerytura Netto : ' + FloatToStr(emeryturaNetto) + LineEnding);
+    Add('Wyliczenie emerytury -----------------------------------');
+    Add('Wyliczona podstawaa : ' + FloatToStr(podstawaEmerytury));
+    Add('Wyliczony procent : ' + FloatToStr(wyslugaProcent));
+    Add('Emerytura Brutto : ' + FloatToStr(emeryturaBrutto));
+    Add('Wyliczony podatek : ' + FloatToStr(podatekKwota) );
+    Add('Wyliczona skłądka zdrowotna : ' + FloatToStr(skladkaZdrowotna) );
+    Add('Emerytura Netto : ' + FloatToStr(emeryturaNetto) );
+    Add('Koniec wyliczenia emerytury ----------------------------');
   end;
 
   Result := True;
