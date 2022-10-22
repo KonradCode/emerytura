@@ -1,4 +1,4 @@
 # Emerytura
-Program do wylicznia emerytury policyjnej 
+Program do wyliczenia emerytury policyjnej 
 stan na 2022 rok
 
