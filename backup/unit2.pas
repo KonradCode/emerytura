@@ -3,9 +3,19 @@ unit Unit2;
 {$mode objfpc}{$H+}
 
 interface
-//function    TForm1.wyliczEmerytureStare : boolean ;
+
 uses
   Classes, SysUtils;
+
+//function    TForm1.wyliczEmerytureStare : boolean ;
+function wyliczPodstawe (pensja,podwyzka:Currency): currency;
+function wyliczProcent(lata,miesiace: integer): currency;
+function wyliczEmerytureBruto(podstawa,procenty: currency): currency;
+function wyliczPodatek (emeryturaBrutto:Currency; podatekProcent,kwotaWolna:integer): integer;
+function wyliczSkladkeZdrowotna(emeryturaBrutto:Currency;skladka:integer): currency;
+function wyliczEmerytureNetto(emeryturaBrutto,podatek,skladka:Currency): currency;
+
+
 
 implementation
 //przyjmując do wyliczenia podaną kwotę uposażenia oraz procent wysługi
@@ -26,6 +36,91 @@ implementation
 //emerytura brutto 6 166,07 x 9% = 554,95 składka zdrowotna
 //emerytura brutto 6 166,07 - 440,-554,95 = 5 171,12 kwota emerytury do
 //wypłaty
+
+
+
+function wyliczPodstawe (pensja,podwyzka:currency): currency;
+var
+  trzynastka: currency;
+begin
+
+
+  pensja := pensja + podwyzka;
+  trzynastka := Round((pensja / 12) * 100);
+  pensja := Round(pensja * 100 + trzynastka);
+  Result :=pensja / 100;
+
+ end;
+function wyliczProcent(lata,miesiace: integer): currency;
+
+var
+  procenty: currency;
+
+begin
+
+  if lata < 15
+  then   procenty := 0
+  else
+      begin
+      procenty := lata - 15;
+      procenty := 40 + (procenty * 2.6);
+      procenty +=  miesiace * (2.6 /12);
+      if procenty > 75 then procenty := 75;
+      end;
+
+  Result := procenty;
+end;
+
+function wyliczEmerytureBruto(podstawa,procenty: currency): currency;
+var obliczenia: integer;
+
+begin
+    if (podstawa = 0) or (procenty = 0) then Result := 0
+  else begin
+       obliczenia := Round(podstawa * procenty);
+       Result := obliczenia / 100;
+       end;
+  end;
+
+function wyliczPodatek (emeryturaBrutto:Currency; podatekProcent,kwotaWolna:integer): integer;
+
+var
+    kwotaPodatku: Currency;
+
+begin
+
+  if emeryturaBrutto = 0 then Result := 0
+  else begin
+       kwotaPodatku := emeryturaBrutto * podatekProcent / 100;
+       Result := Round(kwotaPodatku - kwotaWolna);
+       end;
+end;
+
+
+function wyliczSkladkeZdrowotna(emeryturaBrutto:Currency;skladka:integer): currency;
+
+var
+  obliczenia: integer;
+begin
+    if emeryturaBrutto = 0 then Result := 0
+    else begin
+         obliczenia := Round(emeryturaBrutto * skladka);
+         Result := obliczenia / 100;
+         end;
+end;
+
+
+function wyliczEmerytureNetto(emeryturaBrutto,podatek,skladka:Currency): currency;
+begin
+
+  if emeryturaBrutto = 0 then
+    Result := 0
+  else
+    Result := emeryturaBrutto - podatek - skladka;
+end;
+
+
+
 
 
 //  monolityczne wylicznie   stare
@@ -92,7 +187,7 @@ begin
 //
 //     emeryturaNettoEdit.Text:=FloatToStr (nettoEmerytura);
 //
-//   Result       :=true;
+   Result       :=true;
 end;
 end.
 
