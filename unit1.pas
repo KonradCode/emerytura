@@ -99,11 +99,31 @@ type
     function wyliczPrzyszlaEmeryture(procenty: single): currency;
 
     function szacujWaloryzacje: boolean;
-    procedure  wypiszWaloryzacje ;
+    procedure wypiszWaloryzacje ;
 
     function czytajWaloryzacje: boolean;
 
   public
+    const
+    watoryzacjaTabela: array[0..14,0..2] of String = (
+     ('2016','100,24',''),
+     ('2017','100,44',''),
+     ('2018','102,98',''),
+     ('2019','102,86',''),
+     ('2020','103,56',''),
+     ('2021','104,24',''),
+     ('2022','107,00',''),
+     ('2023','113,80',''),
+     ('2024','100,00',''),
+     ('2025','100,00',''),
+     ('2026','100,00',''),
+     ('2027','100,00',''),
+     ('2028','100,00',''),
+     ('2029','100,00',''),
+     ('2030','100,00','')
+   );
+
+
 
 
   end;
@@ -237,15 +257,13 @@ end;
 
 function TForm1.wyliczPodatek: integer;
 var
-  //kwotaWolna,
-    kwotaPodatku: single;
-
+  kwotaWolna, kwotaPodatku: single;
+   podatek:integer;
 begin
-
-  //kwotaWolna := StrToInt(kwotaWolnaEdit.Text) / 12;
-
-  kwotaPodatku := emeryturaBrutto * StrToInt(podatekEdit.Text) / 100;
-  Result := Round(kwotaPodatku - podatekKwotaWolna);
+  podatek:= StrToInt(podatekEdit.Text);
+  kwotaWolna := (StrToInt(kwotaWolnaEdit.Text) * podatek ) / 1200;
+  kwotaPodatku := emeryturaBrutto * podatek/ 100;
+  Result := Round(kwotaPodatku - kwotaWolna);
 
 end;
 
@@ -345,13 +363,11 @@ begin
 
   for  licznik := 1 to 15 do
   begin
-    if procenty = 0 then
-      procenty := wyliczProcent(licznik)
+    if procenty = 0 then procenty := wyliczProcent(licznik)
     else
     begin
       procenty := 2.6 + procenty;    // prog procentowy
-      if procenty > 75 then
-        procenty := 75;
+      if procenty > 75 then  procenty := 75;
     end;
 
 
@@ -441,87 +457,60 @@ end;
 
 function TForm1.szacujWaloryzacje : Boolean   ;
 
-var
-  i,ile :integer;
-  waloryzacje : array of array of string;
-
-// 2016;100,24;   { TODO : zastanowic sie nad dodawaniem warosci do girda }
-//2017;100,44;
-//2018;102,98;
-//2019;102,86;
-//2020;103,56;
-//2021;107,00;
-//2022;113,80;
+var wiersz,ostatniWiersz  :integer;
+   waloryzacja:currency;
 begin
-  waloryzacje:=nil;
-  SetLength(waloryzacje,7);   { TODO : blad pamieci do poprawy  }
+  ostatniWiersz:=stringgrid1.RowCount-1;
+  for wiersz:=0 to ostatniWiersz  do StringGrid1.Cells[2,wiersz] :=  '';
 
-  waloryzacje[0] :=['2016','100,24',''];
-  waloryzacje[1] :=['2017','100,44',''];
-  waloryzacje[2] :=['2018','102,98',''];
-  waloryzacje[3] :=['2019','102,86',''];
-  waloryzacje[4] :=['2020','103,56',''];
-  waloryzacje[5] :=['2021','107,00',''];
-  waloryzacje[6] :=['2022','113,80',''];
 
-  ile := 6;
-    StringGrid1.RowCount:=1;
+  if czytajWaloryzacje
+     then
+         begin
+           for wiersz:=StringGrid1.Cols[0].IndexOf(FormatDateTime('yyyy',emeryturaWaloryzcjaData)) to  ostatniWiersz do
+           begin
+                try
+                waloryzacja:= StrToCurr( StringGrid1.Cells[1,wiersz]);
+                except
+                 ShowMessage('Wprowadzono błędne dane ! ' + LineEnding + 'Zły procent waloryzacji !');
+                end;
 
-  for i:= 0 to ile do  StringGrid1.InsertRowWithValues(StringGrid1.RowCount,waloryzacje[i]);
+           emeryturaWaloryzcja:= Round(emeryturaWaloryzcja*waloryzacja);
+           emeryturaWaloryzcja:= emeryturaWaloryzcja /100 ;
+           StringGrid1.Cells[2,wiersz] :=  CurrToStr(emeryturaWaloryzcja);
+           end;
 
- //StringGrid1.InsertRowWithValues();
- //with StringGrid1 do
- //
- //begin
- //  InsertRowWithValues(RowCount,tabela);
- //end
- //
 
- //          StringGrid1.RowCount := 1;
- //for i := 0 to 6  do
- //      with StringGrid1 do
- //
- //           begin
- //
- //             InsertRowWithValues(RowCount,wiersz);
- //           end
 
- result:=true;
+
+
+         result:=true;
+         end
+  else result:=false;
+ ;
 end;
 
 
 procedure TForm1.wypiszWaloryzacje ;
 var
-  i,ile :integer;
-  waloryzacje : array of array of string;
+  i :integer;
   begin
-      waloryzacje:=nil;
-      SetLength(waloryzacje,7);
-
-      waloryzacje[0] :=['2016','100,24',''];
-      waloryzacje[1] :=['2017','100,44',''];
-      waloryzacje[2] :=['2018','102,98',''];
-      waloryzacje[3] :=['2019','102,86',''];
-      waloryzacje[4] :=['2020','103,56',''];
-      waloryzacje[5] :=['2021','107,00',''];
-      waloryzacje[6] :=['2022','113,80',''];
-
-      ile := 6;
-      StringGrid1.RowCount:=1;
-
-      for i:= 0 to ile do  StringGrid1.InsertRowWithValues(StringGrid1.RowCount,waloryzacje[i]);
+       StringGrid1.RowCount:=1;
+      for i:= Low(watoryzacjaTabela) to High(watoryzacjaTabela) do  StringGrid1.InsertRowWithValues(StringGrid1.RowCount,watoryzacjaTabela[i]);
     end;
 
  function TForm1.czytajWaloryzacje: boolean;
 
    begin
+     try
+       emeryturaWaloryzcjaData:=DateTimePicker1.DateTime;
+       emeryturaWaloryzcja:= StrTocurr( emeryturaSzacunekEdit.text );
+     except
+       ShowMessage('Wprowadzono błędne dane ! ' + LineEnding + 'Zła kwota emerytury netto !');
+     end;
 
-     emeryturaWaloryzcjaData:=DateTimePicker1.DateTime;
-     emeryturaWaloryzcja:= StrTocurr( emeryturaSzacunekEdit.text );
-     if emeryturaWaloryzcja > 0 then  Result:=true
-     else Result:=False;
 
-
+     if emeryturaWaloryzcja > 0 then  Result:=true else Result:=False;
 
    end;
 
@@ -541,33 +530,9 @@ begin
 end;
 
 procedure TForm1.Button2Click(Sender: TObject);
-var wiersz,ostatniWiersz  :integer;
-   waloryzacja:currency;
 begin
-  wiersz:=0;
-  ostatniWiersz:=stringgrid1.RowCount-1;
-  if czytajWaloryzacje
-     then
-         begin
-           //wiersz:= ;
+  szacujWaloryzacje;
 
-
-           for wiersz:=StringGrid1.Cols[0].IndexOf(FormatDateTime('yyyy',emeryturaWaloryzcjaData)) to  ostatniWiersz do
-           begin
-           waloryzacja:= StrToCurr( StringGrid1.Cells[1,wiersz]);
-           emeryturaWaloryzcja:= Round(emeryturaWaloryzcja*waloryzacja);
-           emeryturaWaloryzcja:= emeryturaWaloryzcja /100 ;
-           StringGrid1.Cells[2,wiersz] :=  CurrToStr(emeryturaWaloryzcja);
-           //wiersz+=1;
-           end;
-
-
-
-
-
-           //
-         end
-  else ;
 end;
 
 procedure TForm1.Button3Click(Sender: TObject);
@@ -581,6 +546,7 @@ procedure TForm1.FormCreate(Sender: TObject);
 begin
   PageControl1.TabIndex := 0;
   StatusBar1.Panels.Items[0].Text:='Emerytura wersja: '+GetFileVersion;
+  //ustawWaloryzacje;
   wypiszWaloryzacje;
 end;
 
