@@ -138,7 +138,7 @@ begin
        end;
 end;
 
-function wyliczPodatek (emeryturaBrutto,podatekProcent,kwotaWolnaMiesieczna:Currency): integer;
+function wyliczPodatek (emeryturaBrutto,podatekProcent,kwotaWolnaMiesieczna:Currency): Currency;
 
 var
     kwotaPodatku: Currency;

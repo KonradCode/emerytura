@@ -11,7 +11,7 @@ uses
 function wyliczPodstawe(pensja,podwyzka:Currency): currency;      // unit2.wyliczPodstawe
 function wyliczProcent(lata,miesiace: integer): currency;
 function wyliczEmerytureBruto(podstawa,procenty: currency): currency;
-function wyliczPodatek (emeryturaBrutto,podatekProcent,kwotaWolnaRok:Currency): integer;
+function wyliczPodatekzRoku (emeryturaBrutto,podatekProcent,kwotaWolnaRok:Currency): integer;
 function wyliczPodatek (emeryturaBrutto,podatekProcent,kwotaWolnaMiesieczna:Currency): Currency;
 function wyliczPodatek (emeryturaBrutto,podatekProcent,kwotaWolnaMiesieczna,skladkaZdrowotnaOdliczna:Currency): Currency;
 function wyliczKwoteWolna (podatekProcent,kwotaWolnaRok:Currency): currency;
@@ -122,7 +122,7 @@ begin
     end;
 end;
 
-function wyliczPodatek (emeryturaBrutto,podatekProcent,kwotaWolnaRok:Currency): integer;
+function wyliczPodatekzRoku (emeryturaBrutto,podatekProcent,kwotaWolnaRok:Currency): integer;
 
 var
     kwotaPodatku,kwotaWolnaWyliczona: Currency;
@@ -132,9 +132,9 @@ begin
   if emeryturaBrutto = 0  then Result := 0
   else begin
         kwotaWolnaWyliczona  :=  Round (podatekProcent   * kwotaWolnaRok);
-        kwotaWolnaWyliczona  :=  kwotaWolnaWyliczona DIV 1200;     // dzielenie na 12 miesiecy i 100%
-        kwotaPodatku := emeryturaBrutto * podatekProcent / 100;
-        Result := Round(kwotaPodatku - kwotaWolnaWyliczona);
+        kwotaWolnaWyliczona  :=  kwotaWolnaWyliczona DIV 1200;  // dzielenie na 12 miesiecy i 100%
+        kwotaPodatku         :=  emeryturaBrutto * podatekProcent / 100;
+        Result               :=  Round(kwotaPodatku - kwotaWolnaWyliczona);
        end;
 end;
 

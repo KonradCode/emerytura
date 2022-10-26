@@ -21,12 +21,12 @@
       <UseVersionInfo Value="True"/>
       <AutoIncrementBuild Value="True"/>
       <MajorVersionNr Value="1"/>
-      <MinorVersionNr Value="1"/>
-      <RevisionNr Value="3"/>
-      <BuildNr Value="8"/>
+      <MinorVersionNr Value="2"/>
+      <RevisionNr Value="1"/>
+      <BuildNr Value="9"/>
       <Language Value="0415"/>
-      <CharSet Value="03B6"/>
-      <Attributes pvaPrivateBuild="True"/>
+      <CharSet Value="04B0"/>
+      <Attributes pvaPreRelease="True" pvaPrivateBuild="True"/>
       <StringTable CompanyName="KC" FileDescription="Wyliczenie emerytury policyjnej" LegalCopyright="KC" OriginalFilename="Emerytura.exe" ProductName="Emerytura" ProductVersion="1"/>
     </VersionInfo>
     <BuildModes Count="3">

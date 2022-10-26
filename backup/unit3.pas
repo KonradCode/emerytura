@@ -42,7 +42,7 @@ end;
 
 procedure TForm2.StaticText1DblClick(Sender: TObject);
 begin
-  open
+  OpenURL('https://github.com/KonradCode/emerytura/releases/');
 end;
 
 end.
