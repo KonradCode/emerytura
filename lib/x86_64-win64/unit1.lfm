@@ -29,9 +29,9 @@ object Form1: TForm1
     Height = 529
     Top = 0
     Width = 655
-    ActivePage = TabSheet1
+    ActivePage = TabSheet3
     Align = alClient
-    TabIndex = 0
+    TabIndex = 2
     TabOrder = 1
     object TabSheet1: TTabSheet
       Caption = 'Wyliczenie emerytury'
@@ -434,14 +434,16 @@ object Form1: TForm1
         ClientHeight = 63
         ClientWidth = 643
         TabOrder = 0
-        object DateTimePicker1: TDateTimePicker
-          Left = 360
+        object waloryzacjaDateTime: TDateTimePicker
+          Left = 544
           Height = 28
           Top = 0
-          Width = 59
+          Width = 63
           CenturyFrom = 1941
           MaxDate = 47848
           MinDate = 42370
+          Font.Style = [fsBold]
+          ParentFont = False
           TabOrder = 0
           TrailingSeparator = False
           TextForNullDate = 'NULL'
@@ -458,14 +460,16 @@ object Form1: TForm1
           HideDateTimeParts = [dtpDay, dtpMonth, dtpHour, dtpMinute, dtpSecond, dtpMiliSec]
           MonthNames = 'Long'
         end
-        object emeryturaSzacunekEdit: TEdit
+        object waloryzacjaPodstawaEdit: TEdit
           Left = 152
           Height = 28
           Top = 0
           Width = 136
           BidiMode = bdRightToLeft
+          Font.Style = [fsBold]
           NumbersOnly = True
           ParentBidiMode = False
+          ParentFont = False
           TabOrder = 1
           Text = '0'
         end
@@ -478,7 +482,7 @@ object Form1: TForm1
           ParentColor = False
         end
         object Label12: TLabel
-          Left = 296
+          Left = 480
           Height = 20
           Top = 8
           Width = 55
@@ -494,6 +498,28 @@ object Form1: TForm1
           Caption = 'Szacuj'
           OnClick = Button2Click
           TabOrder = 2
+        end
+        object Label17: TLabel
+          Left = 296
+          Height = 20
+          Top = 8
+          Width = 103
+          Caption = 'Procent wysługi'
+          ParentColor = False
+        end
+        object waloryzacjaWyslugaEdit: TEdit
+          Left = 408
+          Height = 28
+          Top = 0
+          Width = 44
+          BidiMode = bdRightToLeft
+          Font.Style = [fsBold]
+          NumbersOnly = True
+          ParentBidiMode = False
+          ParentFont = False
+          TabStop = False
+          TabOrder = 3
+          Text = '0'
         end
       end
       object StringGrid1: TStringGrid
@@ -548,21 +574,21 @@ object Form1: TForm1
     end
     object TabSheet4: TTabSheet
       Caption = 'Kontrola'
-      ClientHeight = 481
-      ClientWidth = 595
+      ClientHeight = 496
+      ClientWidth = 647
       object Memo1: TMemo
         Left = 0
-        Height = 481
+        Height = 496
         Top = 0
-        Width = 595
+        Width = 647
         Align = alClient
         TabOrder = 0
       end
     end
   end
   object MainMenu1: TMainMenu
-    Left = 552
-    Top = 56
+    Left = 608
+    Top = 472
     object MenuItem1: TMenuItem
       Caption = 'Program'
       object MenuItem4: TMenuItem
@@ -587,7 +613,7 @@ object Form1: TForm1
     end
   end
   object SaveDialog1: TSaveDialog
-    Left = 482
-    Top = 365
+    Left = 608
+    Top = 432
   end
 end

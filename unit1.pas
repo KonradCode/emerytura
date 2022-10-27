@@ -18,19 +18,20 @@ type
     Button2: TButton;
     Button3: TButton;
     ComboBox1: TComboBox;
-    DateTimePicker1: TDateTimePicker;
+    waloryzacjaDateTime: TDateTimePicker;
     emeryturaBruttoRokEdit: TEdit;
     emeryturaPodstawaEdit: TEdit;
     emeryturaBruttoEdit: TEdit;
     emeryturaNettoEdit: TEdit;
     Label13: TLabel;
     Label16: TLabel;
+    Label17: TLabel;
     MenuItem4: TMenuItem;
     MenuItem5: TMenuItem;
     MenuItem6: TMenuItem;
     SaveDialog1: TSaveDialog;
     wyslugaProcentEdit: TEdit;
-    emeryturaSzacunekEdit: TEdit;
+    waloryzacjaPodstawaEdit: TEdit;
     GroupBox1: TGroupBox;
     GroupBox2: TGroupBox;
     GroupBox3: TGroupBox;
@@ -68,6 +69,7 @@ type
     TabSheet3: TTabSheet;
     TabSheet4: TTabSheet;
     ValueListEditor1: TValueListEditor;
+    waloryzacjaWyslugaEdit: TEdit;
     zdrowotnaEdit: TEdit;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
@@ -113,7 +115,7 @@ type
     function wyliczPrzyszlaEmeryture(procenty: single): currency;
 
     function  szacujWaloryzacje: boolean;
-    procedure szacujWaloryzacje (podstawa:Currency);
+    procedure szacujWaloryzacje (podstawa,wysluga:Currency);
     procedure wypiszWaloryzacje ;
 
     function czytajWaloryzacje: boolean;
@@ -543,10 +545,10 @@ begin
   else result:=false;
  ;
 end;
-procedure  TForm1.szacujWaloryzacje (podstawa:Currency);
+procedure  TForm1.szacujWaloryzacje (podstawa,wysluga:Currency);
 
 var wiersz,ostatniWiersz  :integer;
-   waloryzacja,waloryzcjaPodstawa,waloryzacjaEmerytura,waloryzacjaBrutto, waloryzacjaPodatek,waloryzacjaSkladka:currency;
+   waloryzacja,waloryzacjaWysluga,waloryzcjaPodstawa,waloryzacjaEmerytura,waloryzacjaBrutto, waloryzacjaPodatek,waloryzacjaSkladka:currency;
 begin
   ostatniWiersz:=stringgrid1.RowCount-1;
   for wiersz:=0 to ostatniWiersz  do begin
@@ -557,6 +559,7 @@ begin
                                      end;
 
   waloryzcjaPodstawa:= podstawa;
+  waloryzacjaWysluga:= wysluga;
 
   if czytajWaloryzacje
      then
@@ -572,7 +575,7 @@ begin
            waloryzcjaPodstawa          := Round(waloryzcjaPodstawa*waloryzacja);
            waloryzcjaPodstawa          := waloryzcjaPodstawa /100 ;
            StringGrid1.Cells[2,wiersz] :=  CurrToStr(waloryzcjaPodstawa);
-           waloryzacjaBrutto           := unit2.wyliczEmerytureBruto(waloryzcjaPodstawa,wyslugaProcent);
+           waloryzacjaBrutto           := unit2.wyliczEmerytureBruto(waloryzcjaPodstawa,waloryzacjaWysluga);
            StringGrid1.Cells[4,wiersz] :=  CurrToStr(waloryzacjaBrutto);
 
            // koloryzowanie brutto powyzej 120 000
@@ -581,7 +584,7 @@ begin
            StringGrid1.Cells[5,wiersz] :=  CurrToStr(waloryzacjaBrutto*12);
            //StringGrid1.Columns.Items[5].Font.Color:=clBlack;
 
-                 case   FormatDateTime('yyyy',emeryturaWaloryzcjaData)  of
+                 case   StringGrid1.Cells[0,wiersz]  of
 
                  '2016','2017','2018':waloryzacjaEmerytura:=0;
                  '2019':waloryzacjaEmerytura:=0;
@@ -620,8 +623,8 @@ var
 
    begin
      try
-       emeryturaWaloryzcjaData:=DateTimePicker1.DateTime;
-       emeryturaWaloryzcja:= StrTocurr( emeryturaSzacunekEdit.text );
+       emeryturaWaloryzcjaData:=waloryzacjaDateTime.DateTime;
+       emeryturaWaloryzcja:= StrTocurr( waloryzacjaPodstawaEdit.text );
      except
        ShowMessage('Wprowadzono błędne dane ! ' + LineEnding + 'Zła kwota emerytury netto !');
      end;
@@ -648,15 +651,25 @@ begin
 end;
 
 procedure TForm1.Button2Click(Sender: TObject);
+var waloryzacjaPodstawa,waloryzacjaProcent:Currency;
 begin
  // szacujWaloryzacje;
-  szacujWaloryzacje(podstawaEmerytury);
+   try
+    waloryzacjaPodstawa:=StrTocurr(waloryzacjaPodstawaEdit.Text);
+    waloryzacjaProcent:= StrTocurr(waloryzacjaWyslugaEdit.Text)
+   except
+   ShowMessage('Wprowadzono błędne dane ! ' +LineEnding+ ' Podstawa emerytury lub procent emerytury błedne!');
+   end;
+
+  szacujWaloryzacje(waloryzacjaPodstawa,waloryzacjaProcent);
 end;
 
 procedure TForm1.Button3Click(Sender: TObject);
 begin
   PageControl1.TabIndex := 2;
-  emeryturaSzacunekEdit.Text:=emeryturaPodstawaEdit.Text;
+  waloryzacjaPodstawaEdit.Text:=emeryturaPodstawaEdit.Text;
+  waloryzacjaWyslugaEdit.Text:=wyslugaProcentEdit.Text;
+  waloryzacjaDateTime.Date:=Now;
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
