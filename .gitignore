@@ -2,3 +2,6 @@
 *.dbg
 waloryzacje*.txt
 *.o
+lib/
+emerytura.app/
+backup/
