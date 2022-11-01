@@ -4,7 +4,7 @@
     <PathDelim Value="\"/>
     <Version Value="11"/>
     <BuildModes Active="Debug"/>
-    <Units Count="13">
+    <Units Count="14">
       <Unit0>
         <Filename Value="emerytura.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -19,7 +19,6 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit1"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
         <TopLine Value="611"/>
         <CursorPos X="33" Y="640"/>
@@ -34,7 +33,7 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit3"/>
-        <EditorIndex Value="3"/>
+        <EditorIndex Value="4"/>
         <TopLine Value="11"/>
         <CursorPos X="38" Y="13"/>
         <UsageCount Value="201"/>
@@ -45,7 +44,7 @@
         <Filename Value="versionsupport.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="VersionSupport"/>
-        <EditorIndex Value="4"/>
+        <EditorIndex Value="5"/>
         <TopLine Value="34"/>
         <CursorPos X="10" Y="50"/>
         <UsageCount Value="201"/>
@@ -56,8 +55,8 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="Unit2"/>
         <EditorIndex Value="2"/>
-        <TopLine Value="271"/>
-        <CursorPos X="25" Y="292"/>
+        <TopLine Value="15"/>
+        <CursorPos Y="32"/>
         <UsageCount Value="137"/>
         <Loaded Value="True"/>
       </Unit4>
@@ -120,6 +119,15 @@
         <CursorPos Y="940"/>
         <UsageCount Value="9"/>
       </Unit12>
+      <Unit13>
+        <Filename Value="waloryzacje.txt"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="3"/>
+        <CursorPos X="35" Y="44"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+        <DefaultSyntaxHighlighter Value="None"/>
+      </Unit13>
     </Units>
     <JumpHistory Count="30" HistoryIndex="28">
       <Position1>

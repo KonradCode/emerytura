@@ -1,6 +1,6 @@
 *.exe
 *.dbg
-waloryzacje*.txt
+*.txt
 *.o
 lib/
 emerytura.app/

@@ -29,42 +29,7 @@ function waloryzacjaPodstawa (podstawa,procent:currency): currency;
 function walozyzacjaWylicz(podstawa,wysluga:Currency): waloryzacjaWyliczenia;
 
 implementation
-//7589,00  zł brutto wraz z miesięczną równowartością 1/12 nagrody rocznej
-//stanowiącej kwotę 632,42zł  (7589,00 : 12), podstawa wymiaru emerytury
-//wynosiła będzie - kwotę 8 221,42 (7589,00+632,42)
 
-//Zatem, przyszła emerytura policyjna ustalona będzie w kwocie brutto:
-//6 166,07 zł  (8221,42x 75%)
-
-//Wg stanu prawnego obowiązującego w dniu dzisiejszym kwotę emerytury do
-//wypłaty oblicza się taj poniżej:
-
-//emerytura brutto 6 166,00 x 12% - 300,00 (kwota wolna od podatku) =
-//440,00 (do obliczenia zaliczki na podatekEdit kwoty zaokrągla się do pełnych
-//złotych)
-//emerytura brutto 6 166,07 x 9% = 554,95 składka zdrowotna
-//emerytura brutto 6 166,07 - 440,-554,95 = 5 171,12 kwota emerytury do
-//wypłaty
-
- // 2021 17%/9%/525,12
-
-// kwota wolna = 525,12  / 12 =  43,76 zl/m-c
-//Przyjmując do wyliczenia podaną miesięczną emeryturę brutto w kwocie
-//6166 przed 31.12.2021 r. kwota emerytury do wypłaty obliczana była jak
-//poniżej:
-//6166,00 x 7,75% = 477,87 (część składki zdrowotnej odliczanej od
-//podatku)
-//6166,00 x 17% -43,76 (kwota wolna od podatku) - 477,87 (część składki
-//zdrowotnej odliczanej od podatku) = 527,00 zaliczka na podatek
-//6166,00 x 9% = 554,94(składka zdrowotna )
-//6166,00 - 527,00 (zaliczka na podatek) - 554,94 (składka zdrowotna) =
-//5084,06 kwota emerytury do wypłaty
-
-// 2020   17%   /9% 7,75/525,12
-// 2019   17,75%/9% 7,75/548,30
-// 2018   18%   /9% 7,75/556,02
-// 2017   18%   /9% 7,75/556,02
-// 2016   18%   /9% 7,75/556,02
 
 
 function wyliczPodstawe (pensja,podwyzka:currency): currency;
