@@ -7,20 +7,26 @@ interface
 uses
   Classes, SysUtils;
 
+type waloryzacjaWyliczenia = array[0..3] of string ;
+
+
 //function    TForm1.wyliczEmerytureStare : boolean ;
 function wyliczPodstawe(pensja,podwyzka:Currency): currency;      // unit2.wyliczPodstawe
 function wyliczProcent(lata,miesiace: integer): currency;
 function wyliczEmerytureBruto(podstawa,procenty: currency): currency;
+{ TODO : Do przejzenia i optymalizacji }
 function wyliczPodatekzRoku (emeryturaBrutto,podatekProcent,kwotaWolnaRok:Currency): integer;
 function wyliczPodatek (emeryturaBrutto,podatekProcent,kwotaWolnaMiesieczna:Currency): Currency;
 function wyliczPodatek (emeryturaBrutto,podatekProcent,kwotaWolnaMiesieczna,skladkaZdrowotnaOdliczna:Currency): Currency;
+
 function wyliczKwoteWolna (podatekProcent,kwotaWolnaRok:Currency): currency;
+
 function wyliczSkladkeZdrowotna(emeryturaBrutto,skladka:Currency): currency;
 function wyliczSkladkeZdrowotnaOdejmowana(emeryturaBrutto,skladka:Currency): currency;
 function wyliczEmerytureNetto(emeryturaBrutto,podatek,skladka:Currency): currency;
 function waloryzacjaPodstawa (podstawa,procent:currency): currency;
 
-
+function walozyzacjaWylicz(podstawa,wysluga:Currency): waloryzacjaWyliczenia;
 
 implementation
 //7589,00  zł brutto wraz z miesięczną równowartością 1/12 nagrody rocznej
@@ -214,70 +220,78 @@ begin
 
 
 //  monolityczne wylicznie   stare
-function   wyliczEmerytureStare : boolean ;
-//var
+function   wyliczEmerytureMonolit : boolean ;
+var
 
-  //bruttoPensja     :single;
-  //procenty         :single;
-  //procentyMiesiac  :single;
-  //trzynastka       :single;
-  //podstawaWylicz   :single;
-  //bruttoEmerytura  :single;
-  //podatek_Kwota     :single;
-  //skladka_Zdrowotna :single;
-  //nettoEmerytura   :single;
-  //
-  //wolnaKwota:single;
+  bruttoPensja     :single    =0;
+  procenty         :single    =0;
+  procentyMiesiac  :single    =0;
+  trzynastka       :single    =0;
+  podstawaWylicz   :single    =0;
+  bruttoEmerytura  :single    =0;
+  podatek_Kwota     :single   =0;
+  skladka_Zdrowotna :single   =0;
+  nettoEmerytura   :single    =0;
+
+  wolnaKwota:single           =0;
 
 
 
 
 begin
 
-//   bruttoPensja  := strtoFloat(pensjaBruttoEdit.Text) + strtoFloat(podwyzkaBruttoEdit.text);
-//     trzynastka    := bruttoPensja / 12;
-//     podstawaWylicz:= bruttoPensja + trzynastka  ;
-//     //self.podstawaEmerytury :=podstawaWylicz;
-// wyliczenie procentow
-////    40 % - 15
-////    2,6  - 1
-//
-//
-//  procenty         := 0;
-//  procentyMiesiac  := 0;
-//  procenty:=strtoFloat (lataEdit.Text );
-//  procentyMiesiac := strtoFloat (miesiaceEdit.Text);
-//  if   procenty < 15 then
-//   begin
-//   Result       :=false;
-//   procenty     :=0;
-//   end
-//  else
-//    begin
-//     procentyMiesiac :=   procentyMiesiac * (2.6 / 12);
-//    procenty:= procenty - 15;
-//    procenty:= 40 + procentyMiesiac + (procenty * 2.6) ;
-//    if  procenty > 75 then   procenty :=   75 ;
-//
-//    end;
-////    emerytura brutto
-//      wyslugaProcent:=procenty;
-//      bruttoEmerytura:=   podstawaEmerytury * procenty / 100;
-//
-//   emeryturaBruttoEdit.Text:=FloatToStr(bruttoEmerytura);
-//
-////    emerytura Netto
-//     wolnaKwota:= strtoInt (kwotaWolnaEdit.Text) / 12;
-//     podatekKwota:= bruttoEmerytura * strtoInt(podatekEdit.text)/100;
-//     podatekKwota:=   podatekKwota -  wolnaKwota;
-//
-//     skladkaZdrowotna:= bruttoEmerytura * strtoInt (zdrowotnaEdit.text)/100;
-//
-//     nettoEmerytura:=bruttoEmerytura - podatekKwota - skladkaZdrowotna;
-//
-//     emeryturaNettoEdit.Text:=FloatToStr (nettoEmerytura);
-//
+   //bruttoPensja  := strtoFloat(pensjaBruttoEdit.Text) + strtoFloat(podwyzkaBruttoEdit.text);
+     trzynastka    := bruttoPensja / 12;
+     podstawaWylicz:= bruttoPensja + trzynastka  ;
+     //self.podstawaEmerytury :=podstawaWylicz;
+ //wyliczenie procentow
+ //    40 % - 15
+ //    2,6  - 1
+
+
+  procenty         := 0;
+  procentyMiesiac  := 0;
+  //procenty:=strtoFloat (lataEdit.Text );
+  //procentyMiesiac := strtoFloat (miesiaceEdit.Text);
+  if   procenty < 15 then
+   begin
+   Result       :=false;
+   procenty     :=0;
+   end
+  else
+    begin
+    procentyMiesiac :=   procentyMiesiac * (2.6 / 12);
+    procenty:= procenty - 15;
+    procenty:= 40 + procentyMiesiac + (procenty * 2.6) ;
+    if  procenty > 75 then   procenty :=   75 ;
+
+    end;
+//    emerytura brutto
+      //wyslugaProcent:=procenty;
+      //bruttoEmerytura:=   podstawaEmerytury * procenty / 100;
+
+   //emeryturaBruttoEdit.Text:=FloatToStr(bruttoEmerytura);
+
+//    emerytura Netto
+     //wolnaKwota:= strtoInt (kwotaWolnaEdit.Text) / 12;
+     //podatekKwota:= bruttoEmerytura * strtoInt(podatekEdit.text)/100;
+     //podatekKwota:=   podatekKwota -  wolnaKwota;
+
+     //skladkaZdrowotna:= bruttoEmerytura * strtoInt (zdrowotnaEdit.text)/100;
+
+     //nettoEmerytura:=bruttoEmerytura - podatekKwota - skladkaZdrowotna;
+
+     //emeryturaNettoEdit.Text:=FloatToStr (nettoEmerytura);
+
    Result       :=true;
 end;
+
+
+function walozyzacjaWylicz(podstawa,wysluga:Currency): waloryzacjaWyliczenia;
+begin
+  Result[0]:='';
+  //
+end;
+
 end.
 

@@ -18,6 +18,8 @@ type
     Button2: TButton;
     Button3: TButton;
     ComboBox1: TComboBox;
+    Label18: TLabel;
+    RadioGroup1: TRadioGroup;
     waloryzacjaDateTime: TDateTimePicker;
     emeryturaBruttoRokEdit: TEdit;
     emeryturaPodstawaEdit: TEdit;
@@ -44,7 +46,6 @@ type
     Label14: TLabel;
     Label15: TLabel;
     Label2: TLabel;
-    Label3: TLabel;
     Label4: TLabel;
     Label5: TLabel;
     Label6: TLabel;
@@ -70,6 +71,7 @@ type
     TabSheet4: TTabSheet;
     ValueListEditor1: TValueListEditor;
     waloryzacjaWyslugaEdit: TEdit;
+    wyslugaEdit: TEdit;
     zdrowotnaEdit: TEdit;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
@@ -79,6 +81,9 @@ type
     procedure MenuItem3Click(Sender: TObject);
     procedure MenuItem5Click(Sender: TObject);
     procedure MenuItem6Click(Sender: TObject);
+    procedure RadioGroup1ChangeBounds(Sender: TObject);
+    procedure RadioGroup1SelectionChanged(Sender: TObject);
+    procedure wyslugaEditChange(Sender: TObject);
   private
     komunikatBledu: string;
 
@@ -122,7 +127,7 @@ type
 
   public
     const
-    watoryzacjaTabela: array[0..14,0..3] of String = (
+    waloryzacjaTabela: array[0..14,0..3] of String = (
      ('2016','100,24','',''),
      ('2017','100,44','',''),
      ('2018','102,98','',''),
@@ -140,16 +145,27 @@ type
      ('2030','100,00','','')
    );
 
-   const podatkiTabela :array [0..6,0..4] of Currency = (
-   (2016,18,556.02,9,7.75),
-   (2017,18,556.02,9,7.75),
-   (2018,18,556.02,9,7.75),
-   (2019,17.75,548.30,9,7.75),
-   (2020,17,525.12,9,7.75),
-   (2021,17,556.02,9,7.75),
-   (2022,12,30000,9,0)    // do sprawdzenia
+   const podatkiTabela :array [0..6,0..4] of String = (
+   ('2016','18','556,02','9','7,75'),
+   ('2017','18','556,02','9','7,75'),
+   ('2018','18','556,02','9','7,75'),
+   ('2019','17,75','548,30','9','7,75'),
+   ('2020','17','525,12','9','7,75'),
+   ('2021','17','556,02','9','7,75'),
+   ('2022','12','30000','9','0')
    );  // 0..6 (2016-2022) 0..4 (rok,podatek,kwota wolna,skaldkaZdrowotna,skaldkaZdrowotnaOdliczna
-
+   function podatkiTabelaZnajdz(rok:string):integer;
+   //const podatkiTabela :array [0..6,0..4] of Currency = (
+   //(2016,18,556.02,9,7.75),
+   //(2017,18,556.02,9,7.75),
+   //(2018,18,556.02,9,7.75),
+   //(2019,17.75,548.30,9,7.75),
+   //(2020,17,525.12,9,7.75),
+   //(2021,17,556.02,9,7.75),
+   //(2022,12,30000,9,0)    // do sprawdzenia
+   //);  // 0..6 (2016-2022) 0..4 (rok,podatek,kwota wolna,skaldkaZdrowotna,skaldkaZdrowotnaOdliczna
+   //
+   //
 
   end;
 
@@ -356,20 +372,22 @@ procedure TForm1.wyliczEmerytureNowe;
 begin
 
   podstawaEmerytury      := unit2.wyliczPodstawe(pensjaBrutto,podwyzkaBrutto);    // wywolanie zakrytej funkcji
-  wyslugaProcent         := unit2.wyliczProcent(lataSluzby,miesiaceSluzby);
+    if RadioGroup1.ItemIndex = 0 then  wyslugaProcent         := unit2.wyliczProcent(lataSluzby,miesiaceSluzby)
+  else  ;
   emeryturaBrutto        := unit2.wyliczEmerytureBruto(podstawaEmerytury,wyslugaProcent);
   podatekKwotaWolnaMiesiac:=unit2.wyliczKwoteWolna(podatekProcent,podatekKwotaWolnaRok);   // zastanowic sie
+
   podatekKwota           := unit2.wyliczPodatek(emeryturaBrutto,podatekProcent,podatekKwotaWolnaMiesiac);
   skladkaZdrowotna       := unit2.wyliczSkladkeZdrowotna(emeryturaBrutto,skladkaZdrowotnaProcent);
 
-  emeryturaNetto := wyliczEmerytureNetto;
-  wyslugaProcentEdit.Text:=FloatToStr(wyslugaProcent);
-  emeryturaPodstawaEdit.Text:=FloatToStr(podstawaEmerytury);
-  emeryturaBruttoEdit.Text := FloatToStr(emeryturaBrutto);
+  emeryturaNetto                := wyliczEmerytureNetto;
+  wyslugaProcentEdit.Text       :=FloatToStr(wyslugaProcent);
+  emeryturaPodstawaEdit.Text    :=FloatToStr(podstawaEmerytury);
+  emeryturaBruttoEdit.Text      := FloatToStr(emeryturaBrutto);
   if (emeryturaBrutto*12) > 120000 then emeryturaBruttoRokEdit.Font.Color:= clRed
      else emeryturaBruttoRokEdit.Font.Color:=clBlack;
-  emeryturaBruttoRokEdit.Text := FloatToStr(emeryturaBrutto*12);
-  emeryturaNettoEdit.Text := FloatToStr(emeryturaNetto);
+  emeryturaBruttoRokEdit.Text   := FloatToStr(emeryturaBrutto*12);
+  emeryturaNettoEdit.Text       := FloatToStr(emeryturaNetto);
 
 
 end;
@@ -478,8 +496,16 @@ begin
 // do Brutto
   pensjaBrutto              :=StrToCurr(pensjaBruttoEdit.Text);
   podwyzkaBrutto            :=StrToCurr(podwyzkaBruttoEdit.text);
-  lataSluzby                :=StrToInt(lataEdit.Text);
-  miesiaceSluzby            :=StrToInt(miesiaceEdit.Text);
+
+  if RadioGroup1.ItemIndex = 0    // sprawdzenie
+     then begin
+          lataSluzby                :=StrToInt(lataEdit.Text);
+          miesiaceSluzby            :=StrToInt(miesiaceEdit.Text);
+          end
+   else begin
+       wyslugaProcent               :=StrToInt(wyslugaEdit.Text);
+
+   end;
 //  do netto
   podatekProcent            :=StrToInt(podatekEdit.Text);
   skladkaZdrowotnaProcent   :=StrToInt(zdrowotnaEdit.Text);
@@ -547,9 +573,16 @@ begin
 end;
 procedure  TForm1.szacujWaloryzacje (podstawa,wysluga:Currency);
 
-var wiersz,ostatniWiersz  :integer;
-   waloryzacja,waloryzacjaWysluga,waloryzcjaPodstawa,waloryzacjaEmerytura,waloryzacjaBrutto, waloryzacjaPodatek,waloryzacjaSkladka:currency;
+var wiersz,ostatniWiersz,indexRok  :integer;
+   waloryzacjaRok : string;
+   waloryzacja,waloryzacjaWysluga,waloryzcjaPodstawa,
+   waloryzacjaEmerytura,waloryzacjaBrutto,
+   waloryzacjaPodatek,waloryzacjaPodatekProcent,waloryzacjaKwotaWolnaRok, waloryzacjaKwotaWolnaMiesiac,
+   waloryzacjaSkladka,waloryzacjaSkladkaOdliczana:currency;
 begin
+
+  waloryzacjaSkladkaOdliczana:=0;
+
   ostatniWiersz:=stringgrid1.RowCount-1;
   for wiersz:=0 to ostatniWiersz  do begin
                                      StringGrid1.Cells[2,wiersz] :=  '';
@@ -572,37 +605,62 @@ begin
                  ShowMessage('Wprowadzono błędne dane ! ' + LineEnding + 'Zły procent waloryzacji !');
                 end;
 
-           waloryzcjaPodstawa          := Round(waloryzcjaPodstawa*waloryzacja);
-           waloryzcjaPodstawa          := waloryzcjaPodstawa /100 ;
-           StringGrid1.Cells[2,wiersz] :=  CurrToStr(waloryzcjaPodstawa);
-           waloryzacjaBrutto           := unit2.wyliczEmerytureBruto(waloryzcjaPodstawa,waloryzacjaWysluga);
-           StringGrid1.Cells[4,wiersz] :=  CurrToStr(waloryzacjaBrutto);
+               waloryzcjaPodstawa          := Round(waloryzcjaPodstawa*waloryzacja);
+               waloryzcjaPodstawa          := waloryzcjaPodstawa /100 ;
+               StringGrid1.Cells[2,wiersz] := CurrToStr(waloryzcjaPodstawa);
+               waloryzacjaBrutto           := unit2.wyliczEmerytureBruto(waloryzcjaPodstawa,waloryzacjaWysluga);
+               StringGrid1.Cells[4,wiersz] := CurrToStr(waloryzacjaBrutto);
 
            // koloryzowanie brutto powyzej 120 000
-           if (waloryzacjaBrutto*12) > 120000 then StringGrid1.Columns.Items[5].Font.Color := clRed
-           else StringGrid1.Columns.Items[5].Font.Color:=clBlack;
-           StringGrid1.Cells[5,wiersz] :=  CurrToStr(waloryzacjaBrutto*12);
+               if (waloryzacjaBrutto*12) > 120000 then StringGrid1.Columns.Items[5].Font.Color := clRed
+               else StringGrid1.Columns.Items[5].Font.Color:=clBlack;
+               StringGrid1.Cells[5,wiersz] :=  CurrToStr(waloryzacjaBrutto*12);
            //StringGrid1.Columns.Items[5].Font.Color:=clBlack;
+           waloryzacjaRok:= StringGrid1.Cells[0,wiersz];
 
-                 case   StringGrid1.Cells[0,wiersz]  of
+           if podatkiTabelaZnajdz(waloryzacjaRok) >=0 then indexRok :=  podatkiTabelaZnajdz(waloryzacjaRok)
+                 else indexRok := 6; // index domyslny dla 2022
 
-                 '2016','2017','2018':waloryzacjaEmerytura:=0;
-                 '2019':waloryzacjaEmerytura:=0;
-                 '2020':waloryzacjaEmerytura:=0;
-                 '2021':waloryzacjaEmerytura:=0;
-                 '2023','2022': begin
-                                waloryzacjaPodatek:=unit2.wyliczPodatek(waloryzacjaBrutto,podatekProcent,podatekKwotaWolnaMiesiac);
-                                waloryzacjaSkladka:=unit2.wyliczSkladkeZdrowotna(waloryzacjaBrutto,skladkaZdrowotnaProcent);
+           case  waloryzacjaRok  of
+
+                 '2016','2017','2018','2019','2020','2021':
+                                begin
+                                waloryzacjaPodatekProcent:=StrToCurr(podatkiTabela[indexRok,1]);
+                                waloryzacjaKwotaWolnaRok:=StrToCurr(podatkiTabela[indexRok,2]);
+                                waloryzacjaKwotaWolnaMiesiac:= wyliczKwoteWolna(waloryzacjaPodatekProcent,waloryzacjaKwotaWolnaRok);
+
+                                waloryzacjaSkladka   :=unit2.wyliczSkladkeZdrowotna(waloryzacjaBrutto,StrToCurr(form1.podatkiTabela[indexRok,3]));
+                                waloryzacjaSkladkaOdliczana:=unit2.wyliczSkladkeZdrowotnaOdejmowana(waloryzacjaBrutto,StrToCurr(form1.podatkiTabela[indexRok,4]));
+                                waloryzacjaPodatek   :=unit2.wyliczPodatek(waloryzacjaBrutto,waloryzacjaPodatekProcent,waloryzacjaKwotaWolnaMiesiac,waloryzacjaSkladkaOdliczana);
+
+                                waloryzacjaEmerytura :=unit2.wyliczEmerytureNetto(waloryzacjaBrutto,waloryzacjaPodatek,waloryzacjaSkladka);
+
+                               end;
+
+                 '2022':        begin
+                                waloryzacjaPodatekProcent:=StrToCurr(podatkiTabela[indexRok,1]);
+                                waloryzacjaKwotaWolnaRok:=StrToCurr(podatkiTabela[indexRok,2]);
+                                waloryzacjaKwotaWolnaMiesiac:= wyliczKwoteWolna(waloryzacjaPodatekProcent,waloryzacjaKwotaWolnaRok);
+                                waloryzacjaPodatek:=unit2.wyliczPodatek(waloryzacjaBrutto,waloryzacjaPodatekProcent,waloryzacjaKwotaWolnaMiesiac);
+
+                                waloryzacjaSkladka   :=unit2.wyliczSkladkeZdrowotna(waloryzacjaBrutto,StrToCurr(form1.podatkiTabela[indexRok,3]));
                                 waloryzacjaEmerytura:=unit2.wyliczEmerytureNetto(waloryzacjaBrutto,waloryzacjaPodatek,waloryzacjaSkladka);
                                 end;
                  else
                        begin
-                       waloryzacjaPodatek:=unit2.wyliczPodatek(waloryzacjaBrutto,podatekProcent,podatekKwotaWolnaMiesiac);
-                       waloryzacjaSkladka:=unit2.wyliczSkladkeZdrowotna(waloryzacjaBrutto,skladkaZdrowotnaProcent);
-                       waloryzacjaEmerytura:=unit2.wyliczEmerytureNetto(waloryzacjaBrutto,waloryzacjaPodatek,waloryzacjaSkladka);
+                                waloryzacjaPodatekProcent:=StrToCurr(podatkiTabela[indexRok,1]);
+                                waloryzacjaKwotaWolnaRok:=StrToCurr(podatkiTabela[indexRok,2]);
+                                waloryzacjaKwotaWolnaMiesiac:= wyliczKwoteWolna(waloryzacjaPodatekProcent,waloryzacjaKwotaWolnaRok);
+                                waloryzacjaPodatek:=unit2.wyliczPodatek(waloryzacjaBrutto,waloryzacjaPodatekProcent,waloryzacjaKwotaWolnaMiesiac);
+
+                                waloryzacjaSkladka   :=unit2.wyliczSkladkeZdrowotna(waloryzacjaBrutto,StrToCurr(form1.podatkiTabela[indexRok,3]));
+                                waloryzacjaEmerytura:=unit2.wyliczEmerytureNetto(waloryzacjaBrutto,waloryzacjaPodatek,waloryzacjaSkladka);
+                       //waloryzacjaPodatek:=unit2.wyliczPodatek(waloryzacjaBrutto,podatekProcent,podatekKwotaWolnaMiesiac);
+                       //waloryzacjaSkladka:=unit2.wyliczSkladkeZdrowotna(waloryzacjaBrutto,skladkaZdrowotnaProcent);
+                       //waloryzacjaEmerytura:=unit2.wyliczEmerytureNetto(waloryzacjaBrutto,waloryzacjaPodatek,waloryzacjaSkladka);
                        end;
                  end;
-           StringGrid1.Cells[3,wiersz] :=  CurrToStr(waloryzacjaEmerytura);
+               StringGrid1.Cells[3,wiersz] :=  CurrToStr(waloryzacjaEmerytura);
 
            end;
 
@@ -616,7 +674,7 @@ var
   i :integer;
   begin
        StringGrid1.RowCount:=1;
-      for i:= Low(watoryzacjaTabela) to High(watoryzacjaTabela) do  StringGrid1.InsertRowWithValues(StringGrid1.RowCount,watoryzacjaTabela[i]);
+      for i:= Low(waloryzacjaTabela) to High(waloryzacjaTabela) do  StringGrid1.InsertRowWithValues(StringGrid1.RowCount,waloryzacjaTabela[i]);
     end;
 
  function TForm1.czytajWaloryzacje: boolean;
@@ -633,6 +691,22 @@ var
      if emeryturaWaloryzcja > 0 then  Result:=true else Result:=False;
 
    end;
+
+
+
+ function TForm1.podatkiTabelaZnajdz(rok:string):integer;
+
+ var wiersz : integer ;
+ begin
+      for wiersz:= Low(podatkiTabela) to High(podatkiTabela) do
+          if  podatkiTabela[wiersz,0] = rok then
+             begin
+             Result:=wiersz;
+             exit;
+             end
+       else Result:=-1;
+
+  end;
 
 procedure TForm1.Button1Click(Sender: TObject);
 begin
@@ -702,6 +776,31 @@ begin
       SaveDialog1.FileName:='emerytury.csv';
      if SaveDialog1.Execute then ValueListEditor1.SaveToCSVFile(SaveDialog1.Filename,';',true)
      else  ShowMessage('Nie wybrano pliku!');
+end;
+
+procedure TForm1.RadioGroup1ChangeBounds(Sender: TObject);
+begin
+
+end;
+
+procedure TForm1.RadioGroup1SelectionChanged(Sender: TObject);
+begin
+    if  RadioGroup1.ItemIndex = 0
+       then begin
+            lataEdit.Enabled:=true;
+            miesiaceEdit.Enabled:=true;
+            wyslugaEdit.Enabled:=false;
+            end
+       else begin
+            lataEdit.Enabled:=false;
+            miesiaceEdit.Enabled:=false;
+            wyslugaEdit.Enabled:=true;
+            end  ;
+end;
+
+procedure TForm1.wyslugaEditChange(Sender: TObject);
+begin
+
 end;
 
 end.
