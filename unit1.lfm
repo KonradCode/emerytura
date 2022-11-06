@@ -1,14 +1,16 @@
 object Form1: TForm1
-  Left = 611
+  Left = 806
   Height = 583
-  Top = 246
+  Top = 219
   Width = 655
   Caption = 'Emerytura'
   ClientHeight = 558
   ClientWidth = 655
   DesignTimePPI = 120
+  KeyPreview = True
   Menu = MainMenu1
   OnCreate = FormCreate
+  OnKeyDown = FormKeyDown
   LCLVersion = '2.0.10.0'
   object StatusBar1: TStatusBar
     Left = 0
@@ -18,6 +20,18 @@ object Form1: TForm1
     Panels = <    
       item
         Width = 200
+      end    
+      item
+        Width = 100
+      end    
+      item
+        Width = 50
+      end    
+      item
+        Width = 50
+      end    
+      item
+        Width = 50
       end    
       item
         Width = 50
@@ -144,7 +158,6 @@ object Form1: TForm1
             'Wylicz z lat służby'
             'Podaj procent'
           )
-          OnChangeBounds = RadioGroup1ChangeBounds
           OnSelectionChanged = RadioGroup1SelectionChanged
           TabOrder = 4
         end
@@ -156,7 +169,6 @@ object Form1: TForm1
           BidiMode = bdRightToLeft
           NumbersOnly = True
           ParentBidiMode = False
-          OnChange = wyslugaEditChange
           ParentFont = False
           TabStop = False
           TabOrder = 5
@@ -418,44 +430,108 @@ object Form1: TForm1
         end
       end
     end
-    object TabSheet2: TTabSheet
+    object TabSheet5: TTabSheet
       Caption = 'Przyszła emerytura'
       ClientHeight = 496
       ClientWidth = 647
-      object ValueListEditor1: TValueListEditor
+      object StringGrid2: TStringGrid
         Left = 0
         Height = 496
         Top = 0
         Width = 647
         Align = alClient
-        DefaultColWidth = 100
+        Columns = <        
+          item
+            Alignment = taLeftJustify
+            MaxSize = 100
+            ReadOnly = True
+            Title.Alignment = taCenter
+            Title.Caption = 'Lata'
+            Width = 83
+          end        
+          item
+            Alignment = taRightJustify
+            Title.Alignment = taCenter
+            Title.Caption = 'Procent'
+            Width = 90
+          end        
+          item
+            Alignment = taRightJustify
+            Title.Caption = 'Emerytura Netto'
+            Width = 140
+          end        
+          item
+            Alignment = taRightJustify
+            MinSize = 100
+            MaxSize = 400
+            Title.Alignment = taCenter
+            Title.Caption = 'Emerytura Brutto'
+            Width = 115
+          end        
+          item
+            Alignment = taRightJustify
+            Title.Caption = 'Brutto Rocznie'
+            Width = 120
+          end>
+        DefaultColWidth = 120
         FixedCols = 0
+        Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goEditing, goSmoothScroll]
         RowCount = 16
         TabOrder = 0
-        Strings.Strings = (
-          'za rok='
-          'za 2 lata='
-          'za 3 lata='
-          'za 4 lata='
-          'za 5 lat='
-          'za 6 lat='
-          'za 7 lat='
-          'za 8 lat='
-          'za 9 lat='
-          'za 10 lat='
-          'za 11 lat='
-          'za 12 lat='
-          'za 13 lat='
-          'za 14 lat='
-          'za 15 lat='
-        )
-        TitleCaptions.Strings = (
-          'Lata'
-          'Emerytura Netto'
-        )
         ColWidths = (
-          100
-          543
+          83
+          90
+          140
+          115
+          120
+        )
+        Cells = (
+          15
+          0
+          1
+          'za rok'
+          0
+          2
+          'za 2 lata'
+          0
+          3
+          'za 3 lata'
+          0
+          4
+          'za 4 lata'
+          0
+          5
+          'za 5 lat'
+          0
+          6
+          'za 6 lat'
+          0
+          7
+          'za 7 lat'
+          0
+          8
+          'za 8 lat'
+          0
+          9
+          'za 9 lat'
+          0
+          10
+          'za 10 lat'
+          0
+          11
+          'za 11 lat'
+          0
+          12
+          'za 12 lat'
+          0
+          13
+          'za 13 lat'
+          0
+          14
+          'za 14 lat'
+          0
+          15
+          'za 15 lat'
         )
       end
     end
@@ -611,19 +687,6 @@ object Form1: TForm1
         TabOrder = 1
       end
     end
-    object TabSheet4: TTabSheet
-      Caption = 'Kontrola'
-      ClientHeight = 496
-      ClientWidth = 647
-      object Memo1: TMemo
-        Left = 0
-        Height = 496
-        Top = 0
-        Width = 647
-        Align = alClient
-        TabOrder = 0
-      end
-    end
   end
   object MainMenu1: TMainMenu
     Left = 608
@@ -654,5 +717,9 @@ object Form1: TForm1
   object SaveDialog1: TSaveDialog
     Left = 608
     Top = 432
+  end
+  object Timer1: TTimer
+    Left = 575
+    Top = 217
   end
 end

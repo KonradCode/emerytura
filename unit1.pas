@@ -10,7 +10,7 @@ uses
 
 //   ExtDlgs, Types
 type
-
+   emeryturaPrzyszla = array[0..1] of Currency ; // brutto,netto
   { TForm1 }
 
   TForm1 = class(TForm)
@@ -20,6 +20,9 @@ type
     ComboBox1: TComboBox;
     Label18: TLabel;
     RadioGroup1: TRadioGroup;
+    StringGrid2: TStringGrid;
+    TabSheet5: TTabSheet;
+    Timer1: TTimer;
     waloryzacjaDateTime: TDateTimePicker;
     emeryturaBruttoRokEdit: TEdit;
     emeryturaPodstawaEdit: TEdit;
@@ -53,7 +56,6 @@ type
     Label8: TLabel;
     Label9: TLabel;
     lataEdit: TEdit;
-    Memo1: TMemo;
     miesiaceEdit: TEdit;
     PageControl1: TPageControl;
     pensjaBruttoEdit: TEdit;
@@ -66,10 +68,7 @@ type
     MenuItem3: TMenuItem;
     StringGrid1: TStringGrid;
     TabSheet1: TTabSheet;
-    TabSheet2: TTabSheet;
     TabSheet3: TTabSheet;
-    TabSheet4: TTabSheet;
-    ValueListEditor1: TValueListEditor;
     waloryzacjaWyslugaEdit: TEdit;
     wyslugaEdit: TEdit;
     zdrowotnaEdit: TEdit;
@@ -77,19 +76,18 @@ type
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure MenuItem2Click(Sender: TObject);
     procedure MenuItem3Click(Sender: TObject);
     procedure MenuItem5Click(Sender: TObject);
     procedure MenuItem6Click(Sender: TObject);
-    procedure RadioGroup1ChangeBounds(Sender: TObject);
     procedure RadioGroup1SelectionChanged(Sender: TObject);
-    procedure wyslugaEditChange(Sender: TObject);
   private
     komunikatBledu: string;
 
     lataSluzby,miesiaceSluzby: integer;
     pensjaBrutto,podwyzkaBrutto,podstawaEmerytury,podatekKwotaWolnaMiesiac,wyslugaProcent : currency;
-{ TODO : doprowdzic aby zmienne byly niepotrzebne }
+    { TODO : doprowdzic aby zmienne byly niepotrzebne }
     skladkaZdrowotna,skladkaZdrowotnaProcent,podatekProcent,podatekKwota,podatekKwotaWolnaRok: currency;
     emeryturaBrutto,emeryturaNetto,emeryturaWaloryzcja: currency;
 
@@ -99,7 +97,7 @@ type
 
     function sprawdzDane: boolean;
     function zapiszDane: boolean;
-    procedure wyczyscDane ;
+    procedure wyczyscDane;
 
     function wyliczProcent: currency;
     function wyliczProcent(lat: integer): currency;
@@ -114,16 +112,21 @@ type
     function wyliczEmerytureNetto: currency;
 
     procedure wyliczEmeryture;
-    procedure wyliczEmerytureNowe;
 
-    function wyliczPrzyszleEmerytury: boolean;
+    procedure wypiszPrzyszleEmerytury;
+
     function wyliczPrzyszlaEmeryture(procenty: single): currency;
+    function wyliczPrzyszleEmerytury(procenty: currency): emeryturaPrzyszla;
+
 
     function  szacujWaloryzacje: boolean;
-    procedure szacujWaloryzacje (podstawa,wysluga:Currency);
-    procedure wypiszWaloryzacje ;
+    procedure szacujWaloryzacje(podstawa,wysluga:Currency);
+    procedure wypiszWaloryzacje;
 
     function czytajWaloryzacje: boolean;
+
+    procedure StatusKey(SBar: TStatusBar);
+
 
   public
     const
@@ -174,7 +177,7 @@ var
 
 implementation
 
-uses unit2,unit3,VersionSupport;
+uses unit2,unit3,VersionSupport,Windows,strutils;
 
 {$R *.lfm}
 
@@ -325,49 +328,37 @@ begin
     Result := emeryturaBrutto - podatekKwota - skladkaZdrowotna;
 end;
 
+//procedure TForm1.wyliczEmeryture;
+//
+//var   kwotaWolna: Currency;
+//begin
+//
+//
+//
+//
+//  podstawaEmerytury := wyliczPodstawe;
+//
+//
+//  wyslugaProcent := wyliczProcent;
+//  emeryturaBrutto := wyliczEmerytureBruto;
+//
+//  kwotaWolna  :=  Round (podatekKwotaWolnaRok   * podatekProcent);
+//  podatekKwotaWolnaMiesiac  :=  kwotaWolna DIV 1200;
+//  podatekKwota := wyliczPodatek;
+//
+//  skladkaZdrowotna := wyliczSkladkeZdrowotna;
+//
+//  emeryturaNetto := wyliczEmerytureNetto;
+//
+//  //if  emeryturaBrutto > 0 then
+//  wyslugaProcentEdit.Text:=FloatToStr(wyslugaProcent);
+//  emeryturaPodstawaEdit.Text:=FloatToStr(podstawaEmerytury);
+//  emeryturaBruttoEdit.Text := FloatToStr(emeryturaBrutto);
+//  emeryturaNettoEdit.Text := FloatToStr(emeryturaNetto);
+//
+//end;
+
 procedure TForm1.wyliczEmeryture;
-
-var   kwotaWolna: Currency;
-begin
-
-
-
-
-  podstawaEmerytury := wyliczPodstawe;
-
-
-  wyslugaProcent := wyliczProcent;
-  emeryturaBrutto := wyliczEmerytureBruto;
-
-  kwotaWolna  :=  Round (podatekKwotaWolnaRok   * podatekProcent);
-  podatekKwotaWolnaMiesiac  :=  kwotaWolna DIV 1200;
-  podatekKwota := wyliczPodatek;
-
-  skladkaZdrowotna := wyliczSkladkeZdrowotna;
-
-  emeryturaNetto := wyliczEmerytureNetto;
-
-  //if  emeryturaBrutto > 0 then
-  wyslugaProcentEdit.Text:=FloatToStr(wyslugaProcent);
-  emeryturaPodstawaEdit.Text:=FloatToStr(podstawaEmerytury);
-  emeryturaBruttoEdit.Text := FloatToStr(emeryturaBrutto);
-  emeryturaNettoEdit.Text := FloatToStr(emeryturaNetto);
-  with Memo1.Lines do
-  begin
-    Clear;
-    Add('Wyliczenie emerytury -----------------------------------');
-    Add('Wyliczona podstawaa : ' + FloatToStr(podstawaEmerytury));
-    Add('Wyliczony procent : ' + FloatToStr(wyslugaProcent));
-    Add('Emerytura Brutto : ' + FloatToStr(emeryturaBrutto));
-    Add('Wyliczony podatek : ' + FloatToStr(podatekKwota) );
-    Add('Wyliczona skłądka zdrowotna : ' + FloatToStr(skladkaZdrowotna) );
-    Add('Emerytura Netto : ' + FloatToStr(emeryturaNetto) );
-    Add('Koniec wyliczenia emerytury ----------------------------');
-  end;
-
-end;
-
-procedure TForm1.wyliczEmerytureNowe;
 
 begin
 
@@ -394,7 +385,7 @@ end;
 
 function TForm1.wyliczPrzyszlaEmeryture(procenty: single): currency;
 
-var //obliczenia :integer;
+var
   skladka, podatek, brutto, netto: currency;
 
 begin
@@ -422,45 +413,80 @@ begin
 
 end;
 
-function TForm1.wyliczPrzyszleEmerytury: boolean;
+function TForm1.wyliczPrzyszleEmerytury(procenty: currency): emeryturaPrzyszla;   // czy podstawa
 
 var
-  licznik, pozycja, koniec: integer;
-  procenty: single;
-  emerytura: currency;
-  obrobka: string;
-
-  //  liczy dla kwot emerytury netto
+  skladka, podatek, brutto, netto: currency;
 begin
-  procenty := wyslugaProcent;    // zaokraglenia procentow
-
-  for  licznik := 1 to 15 do
-  begin
-    if procenty = 0 then procenty := wyliczProcent(licznik)
-    else
-    begin
-      procenty := 2.6 + procenty;    // prog procentowy
-      if procenty > 75 then  procenty := 75;
-    end;
+  skladka := 0;
+  podatek := 0;
+  brutto := 0;
+  netto := 0;
 
 
-    emerytura := wyliczPrzyszlaEmeryture(procenty);
+  brutto := Round(podstawaEmerytury * procenty);    //       podstawaEmerytury  - z glownych ustawien
+  brutto := brutto / 100;
 
-    obrobka := ValueListEditor1.Strings[licznik - 1];
-    pozycja := pos('=', obrobka) + 1;
-    koniec := obrobka.Length;
-    Delete(obrobka, pozycja, koniec);
+  if brutto = 0 then netto := 0
+  else
+                begin
+                  skladka := Round(brutto * skladkaZdrowotnaProcent);     { TODO : rozne wersje opodatowania }
+                  skladka := skladka / 100;
 
-    ValueListEditor1.Strings[licznik - 1] := obrobka + CurrToStr(emerytura);
+                  podatek := Round(brutto * podatekProcent);
+                  podatek := podatek / 100;
+                  podatek := Round(podatek - podatekKwotaWolnaMiesiac);
+
+                  netto := brutto - podatek - skladka;
+                end;
+
+  //Result[0] := CurrToStr(procenty);
+  Result[0] := brutto;
+  Result[1] := netto;
 
 
   end;
 
 
-  Result := True;
+
+
+procedure TForm1.wypiszPrzyszleEmerytury;
+ var   wiersz, ostatniWiersz,licznik: integer;
+   emerytura :  emeryturaPrzyszla  ;
+   procenty:Currency;
+ begin
+  ostatniWiersz:=stringgrid2.RowCount-1;
+
+  for wiersz:=0 to ostatniWiersz  do begin
+
+                                     StringGrid2.Cells[1,wiersz] :=  '';
+                                     StringGrid2.Cells[2,wiersz] :=  '';
+                                     StringGrid2.Cells[3,wiersz] :=  '';
+                                     StringGrid2.Cells[4,wiersz] :=  '';
+
+                                     end;
+   procenty := wyslugaProcent;
+
+  for  licznik := 1 to 15 do
+       begin
+            if procenty = 0 then procenty := wyliczProcent(licznik)
+            else
+                begin
+                  procenty := 2.6 + procenty;    // prog procentowy
+                  if procenty > 75 then  procenty := 75;
+                end;
+       emerytura := wyliczPrzyszleEmerytury(procenty);
+
+       StringGrid2.Cells[1,licznik] :=  CurrToStr(procenty);
+       StringGrid2.Cells[2,licznik] :=  CurrToStr(emerytura[1]);
+       StringGrid2.Cells[3,licznik] :=  CurrToStr(emerytura[0]);
+       StringGrid2.Cells[4,licznik] :=  CurrToStr(emerytura[0] *12);
+       end;
+
+
+
+
 end;
-
-
 function TForm1.sprawdzDane: boolean;
 begin
   //przerobic ta funkcje
@@ -708,16 +734,37 @@ var
 
   end;
 
+
+ procedure TForm1.StatusKey(SBar: TStatusBar);
+var
+  time : string;
+begin
+  if Odd(GetKeyState(VK_INSERT)) then
+    SBar.Panels[2].Text := 'Ins'
+  else
+    SBar.Panels[2].Text := '';
+  if Odd(GetKeyState(VK_CAPITAL)) then
+    SBar.Panels[3].Text := 'Caps'
+  else
+    SBar.Panels[3].Text := '';
+  if Odd(GetKeyState(VK_NUMLOCK)) then
+    SBar.Panels[4].Text := 'Num'
+  else
+    SBar.Panels[4].Text := '';
+
+  time := DateTimeToStr(Now);
+  SBar.Panels[5].Text := Copy(time, 1, RPos(':',time)-1);
+end;
+
+
 procedure TForm1.Button1Click(Sender: TObject);
 begin
   if sprawdzDane then
   begin
     wyczyscDane;
     zapiszDane;
-    //wyliczEmeryture;
-     wyliczEmerytureNowe;
-    wyliczPrzyszleEmerytury;
-
+    wyliczEmeryture;
+    wypiszPrzyszleEmerytury; //
   end
 
   else
@@ -752,6 +799,13 @@ begin
   StatusBar1.Panels.Items[0].Text:='Emerytura wersja: '+GetFileVersion;
   //ustawWaloryzacje;
   wypiszWaloryzacje;
+  StatusKey(StatusBar1);
+end;
+
+procedure TForm1.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState
+  );
+begin
+   StatusKey(StatusBar1);
 end;
 
 procedure TForm1.MenuItem2Click(Sender: TObject);
@@ -774,13 +828,8 @@ end;
 procedure TForm1.MenuItem6Click(Sender: TObject);
 begin
       SaveDialog1.FileName:='emerytury.csv';
-     if SaveDialog1.Execute then ValueListEditor1.SaveToCSVFile(SaveDialog1.Filename,';',true)
+     if SaveDialog1.Execute then StringGrid2.SaveToCSVFile(SaveDialog1.Filename,';',true)
      else  ShowMessage('Nie wybrano pliku!');
-end;
-
-procedure TForm1.RadioGroup1ChangeBounds(Sender: TObject);
-begin
-
 end;
 
 procedure TForm1.RadioGroup1SelectionChanged(Sender: TObject);
@@ -796,11 +845,6 @@ begin
             miesiaceEdit.Enabled:=false;
             wyslugaEdit.Enabled:=true;
             end  ;
-end;
-
-procedure TForm1.wyslugaEditChange(Sender: TObject);
-begin
-
 end;
 
 end.
