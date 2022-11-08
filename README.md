@@ -4,6 +4,6 @@ stan na 2022 rok
 
 Przykładowe wyliczenia
 
-![image](https://user-images.githubusercontent.com/70725939/200162503-d34a3489-e651-42c3-a9f9-9a5134c53c02.png)
-![image](https://user-images.githubusercontent.com/70725939/200162527-b4d515a6-ec12-4fbb-ae40-2ca78a4990d0.png)
-![image](https://user-images.githubusercontent.com/70725939/200162450-7c27d7bf-e980-4fb6-ac89-85fa1c6b9f01.png)
+![image](https://user-images.githubusercontent.com/70725939/200628803-d9e01efe-5f87-4290-bbce-21519226203d.png)
+![image](https://user-images.githubusercontent.com/70725939/200628849-a08d7b20-3132-4884-b952-50ea58524474.png)
+![image](https://user-images.githubusercontent.com/70725939/200628890-f185b4c2-8750-4109-921b-3bb92555786a.png)
