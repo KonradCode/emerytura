@@ -1,7 +1,7 @@
 unit Unit1;
 
 {$mode objfpc}{$H+}
-
+{$WARN 4015 off : use DIV instead to get an integer result}
 interface
 
 uses
@@ -11,6 +11,7 @@ uses
 //   ExtDlgs, Types
 type
    emeryturaPrzyszla = array[0..1] of Currency ; // brutto,netto
+
   { TForm1 }
 
   TForm1 = class(TForm)
@@ -41,9 +42,7 @@ type
     GroupBox2: TGroupBox;
     GroupBox3: TGroupBox;
     GroupBox4: TGroupBox;
-    kwotaWolnaEdit: TEdit;
     Label1: TLabel;
-    Label10: TLabel;
     Label11: TLabel;
     Label12: TLabel;
     Label14: TLabel;
@@ -53,13 +52,10 @@ type
     Label5: TLabel;
     Label6: TLabel;
     Label7: TLabel;
-    Label8: TLabel;
-    Label9: TLabel;
     lataEdit: TEdit;
     miesiaceEdit: TEdit;
     PageControl1: TPageControl;
     pensjaBruttoEdit: TEdit;
-    podatekEdit: TEdit;
     podwyzkaBruttoEdit: TEdit;
     StatusBar1: TStatusBar;
     MainMenu1: TMainMenu;
@@ -71,7 +67,6 @@ type
     TabSheet3: TTabSheet;
     waloryzacjaWyslugaEdit: TEdit;
     wyslugaEdit: TEdit;
-    zdrowotnaEdit: TEdit;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -88,7 +83,7 @@ type
     lataSluzby,miesiaceSluzby: integer;
     pensjaBrutto,podwyzkaBrutto,podstawaEmerytury,podatekKwotaWolnaMiesiac,wyslugaProcent : currency;
     { TODO : doprowdzic aby zmienne byly niepotrzebne }
-    skladkaZdrowotna,skladkaZdrowotnaProcent,podatekProcent,podatekKwota,podatekKwotaWolnaRok: currency;
+    skladkaZdrowotna,skladkaZdrowotnaProcent,skladkaZdrowotnaOdliczna,podatekProcent,podatekKwota,podatekKwotaWolnaRok: currency;
     emeryturaBrutto,emeryturaNetto,emeryturaWaloryzcja: currency;
 
     emeryturaWaloryzcjaData: TDate;
@@ -107,8 +102,8 @@ type
     function wyliczEmerytureBruto: currency;
     function wyliczEmerytureBruto(procenty: single): currency;
 
-    function wyliczPodatek: integer;
-    function wyliczSkladkeZdrowotna: currency;
+    //function wyliczPodatek: integer;
+    //function wyliczSkladkeZdrowotna: currency;
     function wyliczEmerytureNetto: currency;
 
     procedure wyliczEmeryture;
@@ -121,7 +116,8 @@ type
 
     function  szacujWaloryzacje: boolean;
     procedure szacujWaloryzacje(podstawa,wysluga:Currency);
-    procedure wypiszWaloryzacje;
+
+    procedure wypiszWaloryzacje;  //wypisuje waloryzacje do stringgird
 
     function czytajWaloryzacje: boolean;
 
@@ -149,14 +145,22 @@ type
    );
 
    const podatkiTabela :array [0..6,0..4] of String = (
-   ('2016','18','556,02','9','7,75'),
-   ('2017','18','556,02','9','7,75'),
-   ('2018','18','556,02','9','7,75'),
-   ('2019','17,75','548,30','9','7,75'),
-   ('2020','17','525,12','9','7,75'),
-   ('2021','17','556,02','9','7,75'),
-   ('2022','12','30000','9','0')
-   );  // 0..6 (2016-2022) 0..4 (rok,podatek,kwota wolna,skaldkaZdrowotna,skaldkaZdrowotnaOdliczna
+         ('2016','18','556,02','9','7,75'),
+         ('2017','18','556,02','9','7,75'),
+         ('2018','18','556,02','9','7,75'),
+         ('2019','17,75','548,30','9','7,75'),
+         ('2020','17','525,12','9','7,75'),
+         ('2021','17','556,02','9','7,75'),
+         ('2022','12','30000','9','0')
+     );
+   //('2016','18','3091','9','7,75'),
+   //('2017','18','6600','9','7,75'),
+   //('2018','18','8000','9','7,75'),
+   //('2019','17,75','8000','9','7,75'),
+   //('2020','17','8000','9','7,75'),
+   //('2021','17','8000','9','7,75'),
+   //('2022','12','30000','9','0')
+    // 0..6 (2016-2022) 0..4 (rok,podatek,kwota wolna,skaldkaZdrowotna,skaldkaZdrowotnaOdliczna
    function podatkiTabelaZnajdz(rok:string):integer;
    //const podatkiTabela :array [0..6,0..4] of Currency = (
    //(2016,18,556.02,9,7.75),
@@ -167,8 +171,7 @@ type
    //(2021,17,556.02,9,7.75),
    //(2022,12,30000,9,0)    // do sprawdzenia
    //);  // 0..6 (2016-2022) 0..4 (rok,podatek,kwota wolna,skaldkaZdrowotna,skaldkaZdrowotnaOdliczna
-   //
-   //
+
 
   end;
 
@@ -213,7 +216,6 @@ begin
          procentyMiesiac:=0;
          miesiaceEdit.Text:='0';
          ShowMessage('Wprowadzono błędne dane ! ' + LineEnding + 'Liczba miesięcy nieprawidłowa');
-
        end;
 
   if procenty < 15 then   procenty := 0
@@ -299,25 +301,25 @@ begin
 end;
 
 
-function TForm1.wyliczPodatek: integer;
-var
-  kwotaWolna, kwotaPodatku: single;
-   podatek:integer;
-begin
-  podatek:= StrToInt(podatekEdit.Text);
-  kwotaWolna := (StrToInt(kwotaWolnaEdit.Text) * podatek ) / 1200;
-  kwotaPodatku := emeryturaBrutto * podatek/ 100;
-  Result := Round(kwotaPodatku - kwotaWolna);
+//function TForm1.wyliczPodatek: integer;
+//var
+//  kwotaWolna, kwotaPodatku: single;
+//   podatek:integer;
+//begin
+//  podatek:= StrToInt(podatekEdit.Text);
+//  kwotaWolna := (StrToInt(kwotaWolnaEdit.Text) * podatek ) / 1200;
+//  kwotaPodatku := emeryturaBrutto * podatek/ 100;
+//  Result := Round(kwotaPodatku - kwotaWolna);
+//
+//end;
 
-end;
-
-function TForm1.wyliczSkladkeZdrowotna: currency;
-var
-  obliczenia: integer;
-begin
-  obliczenia := Round(emeryturaBrutto * StrToInt(zdrowotnaEdit.Text));
-  Result := obliczenia / 100;
-end;
+//function TForm1.wyliczSkladkeZdrowotna: currency;
+//var
+//  obliczenia: integer;
+//begin
+//  obliczenia := Round(emeryturaBrutto * StrToInt(zdrowotnaEdit.Text));
+//  Result := obliczenia / 100;
+//end;
 
 function TForm1.wyliczEmerytureNetto: currency;
 begin
@@ -332,13 +334,7 @@ end;
 //
 //var   kwotaWolna: Currency;
 //begin
-//
-//
-//
-//
 //  podstawaEmerytury := wyliczPodstawe;
-//
-//
 //  wyslugaProcent := wyliczProcent;
 //  emeryturaBrutto := wyliczEmerytureBruto;
 //
@@ -359,6 +355,7 @@ end;
 //end;
 
 procedure TForm1.wyliczEmeryture;
+var wyborRokuPodatkowego:integer;
 
 begin
 
@@ -366,9 +363,25 @@ begin
     if RadioGroup1.ItemIndex = 0 then  wyslugaProcent         := unit2.wyliczProcent(lataSluzby,miesiaceSluzby)
   else  ;
   emeryturaBrutto        := unit2.wyliczEmerytureBruto(podstawaEmerytury,wyslugaProcent);
-  podatekKwotaWolnaMiesiac:=unit2.wyliczKwoteWolna(podatekProcent,podatekKwotaWolnaRok);   // zastanowic sie
 
-  podatekKwota           := unit2.wyliczPodatek(emeryturaBrutto,podatekProcent,podatekKwotaWolnaMiesiac);
+
+
+  wyborRokuPodatkowego := ComboBox1.ItemIndex;     // sprawdzenie po indeksie
+
+  case  wyborRokuPodatkowego of
+         0,1,2,3,4,5:
+            begin   // pobiera dane o skladce zdrowotnej odlicznej
+            podatekKwotaWolnaMiesiac :=podatekKwotaWolnaRok/12;
+            skladkaZdrowotnaOdliczna := wyliczSkladkeZdrowotnaOdejmowana (emeryturaBrutto,StrToCurr(podatkiTabela[wyborRokuPodatkowego,4]));
+            podatekKwota             := unit2.wyliczPodatek(emeryturaBrutto,podatekProcent,podatekKwotaWolnaMiesiac,skladkaZdrowotnaOdliczna);
+            end;
+
+         6: begin
+            podatekKwotaWolnaMiesiac:=unit2.wyliczKwoteWolna(podatekProcent,podatekKwotaWolnaRok);
+            podatekKwota            := unit2.wyliczPodatek(emeryturaBrutto,podatekProcent,podatekKwotaWolnaMiesiac);
+            end;
+
+  end;
   skladkaZdrowotna       := unit2.wyliczSkladkeZdrowotna(emeryturaBrutto,skladkaZdrowotnaProcent);
 
   emeryturaNetto                := wyliczEmerytureNetto;
@@ -465,7 +478,7 @@ procedure TForm1.wypiszPrzyszleEmerytury;
                                      StringGrid2.Cells[4,wiersz] :=  '';
 
                                      end;
-   procenty := wyslugaProcent;
+  procenty := wyslugaProcent;
 
   for  licznik := 1 to 15 do
        begin
@@ -516,6 +529,7 @@ begin
 end;
 
 function TForm1.zapiszDane: boolean;   // do przemyslenia
+var wyborRokuPodatkowego:integer;
 begin
   Result := True;
   try
@@ -532,10 +546,27 @@ begin
        wyslugaProcent               :=StrToInt(wyslugaEdit.Text);
 
    end;
-//  do netto
-  podatekProcent            :=StrToInt(podatekEdit.Text);
-  skladkaZdrowotnaProcent   :=StrToInt(zdrowotnaEdit.Text);
-  podatekKwotaWolnaRok      :=StrToInt(kwotaWolnaEdit.Text);
+//  do netto  do przerobienia !!!
+   wyborRokuPodatkowego := ComboBox1.ItemIndex;
+   podatekProcent             :=StrToCurr(podatkiTabela[wyborRokuPodatkowego,1]);
+   podatekKwotaWolnaRok       :=StrToCurr(podatkiTabela[wyborRokuPodatkowego,2]);
+   skladkaZdrowotnaProcent    :=StrToCurr(podatkiTabela[wyborRokuPodatkowego,3]);
+  //wyborRokuPodatkowego := ComboBox1.ItemIndex;     // sprawdzenie po indeksie
+  //case  wyborRokuPodatkowego of
+  //       0,1,2,3,4,5,:
+  //          begin
+  //           podatekProcent             :=StrToCurr(podatkiTabela[wyborRokuPodatkowego,1]);
+  //           podatekKwotaWolnaRok       :=StrToCurr(podatkiTabela[wyborRokuPodatkowego,2]);
+  //           skladkaZdrowotnaProcent    :=StrToCurr(podatkiTabela[wyborRokuPodatkowego,3]);
+  //          end;
+  //
+  //       6: begin
+  //
+  //           end;
+  //end;
+  //podatekProcent            :=StrToInt(podatekEdit.Text);
+  //skladkaZdrowotnaProcent   :=StrToInt(zdrowotnaEdit.Text);
+  //podatekKwotaWolnaRok      :=StrToInt(kwotaWolnaEdit.Text);
 
   except
   ShowMessage('Wprowadzono błędne dane ! ' + LineEnding + '');   { TODO : jak doprecyzowac }
@@ -571,7 +602,6 @@ begin
   ostatniWiersz:=stringgrid1.RowCount-1;
   for wiersz:=0 to ostatniWiersz  do StringGrid1.Cells[2,wiersz] :=  '';
 
-
   if czytajWaloryzacje
      then
          begin
@@ -587,10 +617,6 @@ begin
            emeryturaWaloryzcja:= emeryturaWaloryzcja /100 ;
            StringGrid1.Cells[2,wiersz] :=  CurrToStr(emeryturaWaloryzcja);
            end;
-
-
-
-
 
          result:=true;
          end
@@ -653,7 +679,7 @@ begin
                                 begin
                                 waloryzacjaPodatekProcent:=StrToCurr(podatkiTabela[indexRok,1]);
                                 waloryzacjaKwotaWolnaRok:=StrToCurr(podatkiTabela[indexRok,2]);
-                                waloryzacjaKwotaWolnaMiesiac:= wyliczKwoteWolna(waloryzacjaPodatekProcent,waloryzacjaKwotaWolnaRok);
+                                waloryzacjaKwotaWolnaMiesiac:= waloryzacjaKwotaWolnaRok/12;
 
                                 waloryzacjaSkladka   :=unit2.wyliczSkladkeZdrowotna(waloryzacjaBrutto,StrToCurr(form1.podatkiTabela[indexRok,3]));
                                 waloryzacjaSkladkaOdliczana:=unit2.wyliczSkladkeZdrowotnaOdejmowana(waloryzacjaBrutto,StrToCurr(form1.podatkiTabela[indexRok,4]));
@@ -752,8 +778,8 @@ begin
   else
     SBar.Panels[4].Text := '';
 
-  time := DateTimeToStr(Now);
-  SBar.Panels[5].Text := Copy(time, 1, RPos(':',time)-1);
+  //time := DateTimeToStr(Now);
+  //SBar.Panels[5].Text := Copy(time, 1, RPos(':',time)-1);
 end;
 
 
@@ -774,12 +800,11 @@ end;
 procedure TForm1.Button2Click(Sender: TObject);
 var waloryzacjaPodstawa,waloryzacjaProcent:Currency;
 begin
- // szacujWaloryzacje;
    try
     waloryzacjaPodstawa:=StrTocurr(waloryzacjaPodstawaEdit.Text);
     waloryzacjaProcent:= StrTocurr(waloryzacjaWyslugaEdit.Text)
    except
-   ShowMessage('Wprowadzono błędne dane ! ' +LineEnding+ ' Podstawa emerytury lub procent emerytury błedne!');
+    ShowMessage('Wprowadzono błędne dane ! ' +LineEnding+ ' Podstawa emerytury lub procent emerytury błedne!');
    end;
 
   szacujWaloryzacje(waloryzacjaPodstawa,waloryzacjaProcent);
@@ -797,7 +822,6 @@ procedure TForm1.FormCreate(Sender: TObject);
 begin
   PageControl1.TabIndex := 0;
   StatusBar1.Panels.Items[0].Text:='Emerytura wersja: '+GetFileVersion;
-  //ustawWaloryzacje;
   wypiszWaloryzacje;
   StatusKey(StatusBar1);
 end;

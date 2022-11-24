@@ -7,11 +7,32 @@ interface
 uses
   Classes, SysUtils;
 
-type waloryzacjaWyliczenia = array[0..3] of string ;
+type
+  waloryzacjaWyliczenia = array[0..3] of string ;
+
+  podatkiRecord = record     //wersja rekordowa ,
+   Rok:string;
+   PodatekProcent:string;
+   PodatekKwotaWolnaRok:string;
+   SkladkaZdrowotna:string;
+   SkladkaZdrowotnaOdliczna:string;
+  end;
+
+
+   emeryturaPrzyszlaRecord = record  // wersja rekordowa
+     brutto:   Currency;
+     netto:    Currency;
+   end;
+
+  { Emerytura }
+
+
+
+
 
 
 //function    TForm1.wyliczEmerytureStare : boolean ;
-function wyliczPodstawe(pensja,podwyzka:Currency): currency;      // unit2.wyliczPodstawe
+function wyliczPodstawe(pensja,podwyzka:Currency): currency;      //
 function wyliczProcent(lata,miesiace: integer): currency;
 function wyliczEmerytureBruto(podstawa,procenty: currency): currency;
 { TODO : Do przejzenia i optymalizacji }
@@ -19,7 +40,7 @@ function wyliczPodatekzRoku (emeryturaBrutto,podatekProcent,kwotaWolnaRok:Curren
 function wyliczPodatek (emeryturaBrutto,podatekProcent,kwotaWolnaMiesieczna:Currency): Currency;
 function wyliczPodatek (emeryturaBrutto,podatekProcent,kwotaWolnaMiesieczna,skladkaZdrowotnaOdliczna:Currency): Currency;
 
-function wyliczKwoteWolna (podatekProcent,kwotaWolnaRok:Currency): currency;
+function wyliczKwoteWolna (podatekProcent,kwotaWolnaRok:Currency): currency;     // dotyczy tylko 2022 i dalej
 
 function wyliczSkladkeZdrowotna(emeryturaBrutto,skladka:Currency): currency;
 function wyliczSkladkeZdrowotnaOdejmowana(emeryturaBrutto,skladka:Currency): currency;
@@ -32,7 +53,7 @@ implementation
 
 
 
-function wyliczPodstawe (pensja,podwyzka:currency): currency;
+function wyliczPodstawe(pensja, podwyzka: Currency): currency;
 var
   trzynastka: currency;
 begin
@@ -119,7 +140,10 @@ begin
   if emeryturaBrutto = 0 then Result := 0  else
     begin
         kwotaPodatku := emeryturaBrutto * podatekProcent / 100;
-        Result := Round(kwotaPodatku - kwotaWolnaMiesieczna);
+                if     kwotaPodatku > kwotaWolnaMiesieczna then
+                Result := Round(kwotaPodatku - kwotaWolnaMiesieczna)
+                else  Result :=0;
+
     end;
 end;
 
@@ -132,7 +156,9 @@ begin
   if emeryturaBrutto = 0 then Result := 0  else
     begin
         kwotaPodatku := emeryturaBrutto * podatekProcent / 100;
-        Result := Round(kwotaPodatku - kwotaWolnaMiesieczna - skladkaZdrowotnaOdliczna);
+        if     kwotaPodatku > (kwotaWolnaMiesieczna+ skladkaZdrowotnaOdliczna)then
+        Result := Round(kwotaPodatku - kwotaWolnaMiesieczna - skladkaZdrowotnaOdliczna)
+        else  Result :=0;
     end;
 end;
 
@@ -257,6 +283,11 @@ begin
   Result[0]:='';
   //
 end;
+
+
+
+
+
 
 end.
 

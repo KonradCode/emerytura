@@ -23,10 +23,10 @@
       <MajorVersionNr Value="1"/>
       <MinorVersionNr Value="2"/>
       <RevisionNr Value="2"/>
-      <BuildNr Value="11"/>
+      <BuildNr Value="14"/>
       <Language Value="0415"/>
       <CharSet Value="04B0"/>
-      <Attributes pvaPreRelease="True" pvaPrivateBuild="True"/>
+      <Attributes pvaPrivateBuild="True"/>
       <StringTable CompanyName="KC" FileDescription="Wyliczenie emerytury policyjnej" LegalCopyright="KC" OriginalFilename="Emerytura.exe" ProductName="Emerytura" ProductVersion="1"/>
     </VersionInfo>
     <BuildModes Count="3">
@@ -121,7 +121,7 @@
         <PackageName Value="LCL"/>
       </Item2>
     </RequiredPackages>
-    <Units Count="5">
+    <Units Count="7">
       <Unit0>
         <Filename Value="emerytura.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -152,6 +152,14 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="Unit2"/>
       </Unit4>
+      <Unit5>
+        <Filename Value="emerytura.tobject.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="emerytura.newobj.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit6>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

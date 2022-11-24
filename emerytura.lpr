@@ -8,7 +8,8 @@ uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, datetimectrls, Unit1, Unit3, VersionSupport, Unit2
+  Forms, datetimectrls, Unit1, Unit3, VersionSupport,
+  Unit2, emerytura.newobj, emerytura.tobject
   { you can add units after this };
 
 {$R *.res}
