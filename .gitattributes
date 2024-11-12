@@ -1,3 +1,6 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+*.pas export-ignore
+*.lfm export-ignore
+emerytura.* export-ignore 
 src export-ignore
