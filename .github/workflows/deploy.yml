@@ -23,6 +23,12 @@ jobs:
         run: |
           curl -L -o emka.exe https://github.com/KonradCode/emerytura/releases/download/2/emka.exe
 
+      # Uruchom skrypt PowerShell
+      - name: Run deploy.ps1
+        run: |
+          powershell -File ./deploy.ps1
+
+
 
       # Rejestrowanie wdrożenia w sekcji Deployments
       - name: Mark Deployment in GitHub
