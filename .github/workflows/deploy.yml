@@ -32,7 +32,7 @@ jobs:
 
       # Rejestrowanie wdrożenia w sekcji Deployments
       - name: Mark Deployment in GitHub
-        uses: peter-evans/create-or-update-deployment@v2
+        uses: peter-evans/create-or-update-deployment
         with:
           environment: production
           description: Deployed emka.exe from GitHub Release to production
