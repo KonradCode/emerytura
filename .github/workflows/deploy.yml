@@ -1,4 +1,4 @@
-name: Deploy emka.exe from GitHub Release
+name: Odpal Emeryture z GitHub Release
 
 on:
   workflow_dispatch:
