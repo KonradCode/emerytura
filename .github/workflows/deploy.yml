@@ -1,4 +1,4 @@
-name: Build and Deploy Win32 App
+name: Deploy emka.exe
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: windows-latest
 
     steps:
@@ -14,26 +14,29 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Instalacja zależności
-      - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v1
-
-      # Kompilacja aplikacji
+      # (Opcjonalnie) Budowanie pliku emka.exe
       - name: Build application
         run: |
-          msbuild /p:Configuration=Release /p:Platform=x86 MyApp.sln
+          echo "Build step here if needed"
+          # Na przykład: msbuild MyApp.sln
 
-      # Pakowanie aplikacji (np. za pomocą Inno Setup)
-      - name: Package application
+      # Przesyłanie pliku emka.exe na serwer docelowy
+      - name: Deploy to server
         run: |
-          "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" MyInstaller.iss
+          # Zastąp poniższy przykład odpowiednią metodą przesyłania
+          scp emka.exe user@your-server:/path/to/deploy/
 
-  deploy:
-    needs: build
-    runs-on: windows-latest
-
-    steps:
-      # Przesłanie plików instalacyjnych do miejsca wdrożenia
-      - name: Deploy to Production
+      # (Opcjonalnie) Uruchamianie aplikacji na serwerze
+      - name: Start application
         run: |
-          scp ./Output/MyInstaller.exe user@production-server:/path/to/deploy/
+          ssh user@your-server "start /b /path/to/deploy/emka.exe"
+
+      # Rejestrowanie wdrożenia w GitHub Deployments
+      - name: Mark Deployment in GitHub
+        uses: peter-evans/create-or-update-deployment@v2
+        with:
+          environment: production
+          description: Deploying emka.exe to production
+          auto_merge: false
+          transient_environment: false
+
