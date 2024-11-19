@@ -1,14 +1,11 @@
 # Parametry
-$remoteServer = "192.168.1.100"
-$remotePath = "C:\DeployedApps"
-$appName = "emka.exe"
+$url = "https://github.com/KonradCode/emerytura/releases/download/2/emka.exe"
+$destination = "C:\DeployedApps\emka.exe"
 
-# Pobierz aplikację z serwera
-Write-Host "Przesyłanie aplikacji na serwer..."
-Copy-Item -Path .\$appName -Destination "\\$remoteServer\$remotePath" -Force
+# Pobierz plik z GitHub Releases
+Write-Host "Pobieranie pliku emka.exe z GitHub..."
+Invoke-WebRequest -Uri $url -OutFile $destination
 
-# Uruchom aplikację
+# Uruchom aplikację (opcjonalnie)
 Write-Host "Uruchamianie aplikacji..."
-Invoke-Command -ComputerName $remoteServer -ScriptBlock {
-    Start-Process -FilePath "C:\DeployedApps\emka.exe" -NoNewWindow
-}
+Start-Process -FilePath $destination -NoNewWindow
