@@ -1,0 +1,39 @@
+name: Build and Deploy Win32 App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      # Pobranie kodu źródłowego
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Instalacja zależności
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1
+
+      # Kompilacja aplikacji
+      - name: Build application
+        run: |
+          msbuild /p:Configuration=Release /p:Platform=x86 MyApp.sln
+
+      # Pakowanie aplikacji (np. za pomocą Inno Setup)
+      - name: Package application
+        run: |
+          "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" MyInstaller.iss
+
+  deploy:
+    needs: build
+    runs-on: windows-latest
+
+    steps:
+      # Przesłanie plików instalacyjnych do miejsca wdrożenia
+      - name: Deploy to Production
+        run: |
+          scp ./Output/MyInstaller.exe user@production-server:/path/to/deploy/
