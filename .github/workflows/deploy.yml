@@ -18,17 +18,22 @@ jobs:
     runs-on: windows-latest
 
     steps:
+      # Sprawdź repozytorium
+      - name: Checkout repository
+        uses: actions/checkout@v3
+    
       # Pobranie pliku emka.exe z GitHub Releases
       - name: Download emka.exe
         run: |
           curl -L -o emka.exe https://github.com/KonradCode/emerytura/releases/download/2/emka.exe
+
+      - name: List files in working directory
+        run: dir
 
       # Uruchom skrypt PowerShell
       - name: Run deploy.ps1
         run: |
           powershell -File ./deploy.ps1
 
-      # Sprawdź repozytorium
-      - name: Checkout repository
-        uses: actions/checkout@v3
+
 
