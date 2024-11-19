@@ -1,42 +1,31 @@
-name: Deploy emka.exe
+name: Deploy emka.exe from GitHub Release
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch: # Pozwala uruchomić workflow ręcznie
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: windows-latest
 
     steps:
-      # Pobranie kodu źródłowego
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      # (Opcjonalnie) Budowanie pliku emka.exe
-      - name: Build application
+      # Pobranie pliku emka.exe z GitHub Releases
+      - name: Download emka.exe
         run: |
-          echo "Build step here if needed"
-          # Na przykład: msbuild MyApp.sln
+          curl -L -o emka.exe https://github.com/KonradCode/emerytura/releases/download/2/emka.exe
 
-      # Przesyłanie pliku emka.exe na serwer docelowy
-      - name: Deploy to server
+      # Przesyłanie pliku na serwer docelowy (przykład z SCP)
+      - name: Upload emka.exe to server
         run: |
-          # Zastąp poniższy przykład odpowiednią metodą przesyłania
           scp emka.exe user@your-server:/path/to/deploy/
 
-      # (Opcjonalnie) Uruchamianie aplikacji na serwerze
-      - name: Start application
+      # (Opcjonalnie) Uruchamianie aplikacji
+      - name: Start application on server
         run: |
           ssh user@your-server "start /b /path/to/deploy/emka.exe"
 
-      # Rejestrowanie wdrożenia w GitHub Deployments
+      # Rejestrowanie wdrożenia w sekcji Deployments
       - name: Mark Deployment in GitHub
         uses: peter-evans/create-or-update-deployment@v2
         with:
           environment: production
-          description: Deploying emka.exe to production
-          auto_merge: false
-          transient_environment: false
-
+          description: Deployed emka.exe from GitHub Release to production
