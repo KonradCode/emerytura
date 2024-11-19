@@ -28,11 +28,7 @@ jobs:
         run: |
           powershell -File ./deploy.ps1
 
+      # Sprawdź repozytorium
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-
-      # Rejestrowanie wdrożenia w sekcji Deployments
-      - name: Mark Deployment in GitHub
-        uses: peter-evans/create-or-update-deployment
-        with:
-          environment: production
-          description: Deployed emka.exe from GitHub Release to production
