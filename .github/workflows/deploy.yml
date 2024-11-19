@@ -36,7 +36,7 @@ jobs:
           powershell -File ./deploy.ps1
 
 
-    - name: Mark Deployment in GitHub
+      - name: Mark Deployment in GitHub
         uses: peter-evans/create-or-update-deployment@v2
         with:
           environment: production
