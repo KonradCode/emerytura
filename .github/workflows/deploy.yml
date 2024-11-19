@@ -1,7 +1,17 @@
 name: Deploy emka.exe from GitHub Release
 
 on:
-  workflow_dispatch: # Pozwala uruchomić workflow ręcznie
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Wybierz środowisko do wdrożenia"
+        required: true
+        default: "production"
+        type: choice
+        options:
+          - development
+          - staging
+          - production
 
 jobs:
   deploy:
