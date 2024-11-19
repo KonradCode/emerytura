@@ -23,15 +23,6 @@ jobs:
         run: |
           curl -L -o emka.exe https://github.com/KonradCode/emerytura/releases/download/2/emka.exe
 
-      # Przesyłanie pliku na serwer docelowy (przykład z SCP)
-      - name: Upload emka.exe to server
-        run: |
-          scp emka.exe user@your-server:/path/to/deploy/
-
-      # (Opcjonalnie) Uruchamianie aplikacji
-      - name: Start application on server
-        run: |
-          ssh user@your-server "start /b /path/to/deploy/emka.exe"
 
       # Rejestrowanie wdrożenia w sekcji Deployments
       - name: Mark Deployment in GitHub
