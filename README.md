@@ -1,9 +1,8 @@
 # Emerytura
 Program do wyliczenia emerytury policyjnej 
-stan na 2022 rok
+stan na 2024 rok
 
 Przykładowe wyliczenia
-
-![image](https://user-images.githubusercontent.com/70725939/200628803-d9e01efe-5f87-4290-bbce-21519226203d.png)
-![image](https://user-images.githubusercontent.com/70725939/200628849-a08d7b20-3132-4884-b952-50ea58524474.png)
-![image](https://user-images.githubusercontent.com/70725939/200628890-f185b4c2-8750-4109-921b-3bb92555786a.png)
+![image](https://github.com/user-attachments/assets/d8c338eb-3d83-48ea-9204-9229e5e4ad92)
+![image](https://github.com/user-attachments/assets/52f62e55-ad03-4f4c-a7bc-8faae46a94e1)
+![image](https://github.com/user-attachments/assets/f589ed13-f390-4095-8f23-a706e259dda2)
