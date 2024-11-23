@@ -2,6 +2,8 @@
 *.dbg
 *.txt
 *.o
+*.xlsx
+*.jpg
 lib/
 emerytura.app/
 backup/
