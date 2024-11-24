@@ -1,17 +1,25 @@
-object Form2: TForm2
-  Left = 570
-  Height = 230
-  Top = 335
-  Width = 472
-  Caption = 'O programie '
-  ClientHeight = 230
-  ClientWidth = 472
+object Form3: TForm3
+  Left = 467
+  Height = 195
+  Top = 299
+  Width = 483
+  Caption = 'O programie'
+  ClientHeight = 195
+  ClientWidth = 483
   DesignTimePPI = 120
-  OnCreate = FormCreate
-  LCLVersion = '2.0.10.0'
+  LCLVersion = '2.2.6.0'
+  object StaticText1: TStaticText
+    Left = 96
+    Height = 195
+    Top = 0
+    Width = 387
+    Align = alClient
+    Caption = 'Symulator obliczeń emerytury mundurowej '#13#10'wersja'#13#10'Autor: Konrad Zdziechowicz - Kielce'#13#10'Licencja Freeware'#13#10'https://github.com/KonradCode/emerytura/releases/'#13#10#13#10'Obliczenia dla art.15 ustawy '#13#10'o zaopatrzeniu emerytalnym funkcjonariuszy Policji ...'
+    TabOrder = 0
+  end
   object Image1: TImage
     Left = 0
-    Height = 230
+    Height = 195
     Top = 0
     Width = 96
     Align = alLeft
@@ -15738,15 +15746,5 @@ object Form2: TForm2
       D04585200FA514515BA7A18D91FFD9
     }
     Proportional = True
-  end
-  object StaticText1: TStaticText
-    Left = 96
-    Height = 230
-    Top = 0
-    Width = 376
-    Align = alClient
-    Caption = 'Emerytura '#13#10'wersja'#13#10'Autor: Konrad Zdziechowicz - Kielce'#13#10'Licencja Freeware'#13#10'https://github.com/KonradCode/emerytura/releases/'#13#10#13#10'Obliczenia aktualne na 2022 rok'#13#10'dla art.15 pkt1 ustawy '#13#10'o zaopatrzeniu emerytalnym funkcjonariuszy Policji ...'
-    OnDblClick = StaticText1DblClick
-    TabOrder = 0
   end
 end
